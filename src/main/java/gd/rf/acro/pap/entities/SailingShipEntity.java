@@ -39,7 +39,7 @@ public class SailingShipEntity extends PigEntity {
     public float getSaddledSpeed() {
         if(this.world.getBlockState(this.getBlockPos().down()).getBlock()== Blocks.WATER)
         {
-            return 2;
+            return 1;
         }
         return 0.1f;
     }

@@ -32,13 +32,13 @@ public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         try {
             VertexConsumerProvider vertexConsumerProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-            List<String> blocks = FileUtils.readLines(new File(FabricLoader.getInstance().getConfigDirectory().getPath() + "/PiratesAndPluderers/ships/"+mymodel),"utf-8");
+            List<String> blocks = FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+mymodel),"utf-8");
             blocks.forEach(line->
             {
                 String[] compound = line.split(" ");
                 Block block = Registry.BLOCK.get(new Identifier(compound[0]));
                 matrices.push();
-                matrices.translate(Double.parseDouble(compound[1]),Double.parseDouble(compound[2]),Double.parseDouble(compound[3]));
+                matrices.translate(Double.parseDouble(compound[1]),0-Double.parseDouble(compound[2]),Double.parseDouble(compound[3]));
                 MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(block.getDefaultState(),matrices, vertexConsumerProvider,light,overlay);
                 matrices.pop();
             });
