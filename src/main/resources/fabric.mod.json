@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "pap",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Pirates And Plunderers",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "Acro","inky"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -19,17 +19,17 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "gd.rf.acro.pap.PiratesAndPlunderers"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "pap.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.15.x"
+    "minecraft": "1.16.x"
   },
   "suggests": {
     "flamingo": "*"
