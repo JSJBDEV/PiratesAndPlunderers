@@ -1,5 +1,6 @@
 package gd.rf.acro.pap.entities;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,6 +33,15 @@ public class SailingShipEntity extends PigEntity {
     @Override
     protected void initGoals() {
 
+    }
+
+    @Override
+    public float getSaddledSpeed() {
+        if(this.world.getBlockState(this.getBlockPos().down()).getBlock()== Blocks.WATER)
+        {
+            return 2;
+        }
+        return 0.1f;
     }
 
     @Override

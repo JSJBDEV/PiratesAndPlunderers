@@ -1,0 +1,12 @@
+package gd.rf.acro.pap;
+
+import gd.rf.acro.pap.entities.SailingShipEntityRenderer;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+
+public class ClientInit implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        EntityRendererRegistry.INSTANCE.register(PiratesAndPlunderers.SAILING_BOAT_ENTITY_ENTITY_TYPE, (entityRenderDispatcher, context) -> new SailingShipEntityRenderer(entityRenderDispatcher));
+    }
+}
