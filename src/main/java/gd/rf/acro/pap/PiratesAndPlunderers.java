@@ -1,5 +1,6 @@
 package gd.rf.acro.pap;
 
+import gd.rf.acro.pap.blocks.RandomDecayingBlock;
 import gd.rf.acro.pap.blocks.ShipBuilderBlock;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.MusketItem;
@@ -42,9 +43,11 @@ public class PiratesAndPlunderers implements ModInitializer {
 		System.out.println("Hello Fabric world!");
 	}
 	public static final ShipBuilderBlock SHIP_BUILDER_BLOCK = new ShipBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static final RandomDecayingBlock SHIP_BUILDER_MARKER = new RandomDecayingBlock(FabricBlockSettings.of(Material.METAL).strength(-1,3600000.0F).ticksRandomly().build());
 	private void registerBlocks()
 	{
 		Registry.register(Registry.BLOCK,new Identifier("pap","ship_builder"),SHIP_BUILDER_BLOCK);
+		Registry.register(Registry.BLOCK,new Identifier("pap","ship_builder_marker"),SHIP_BUILDER_MARKER);
 	}
 	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(ItemGroup.MISC));
 	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(ItemGroup.MISC));

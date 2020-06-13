@@ -37,17 +37,20 @@ public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
 
-            VertexConsumerProvider vertexConsumerProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-            blocks.forEach(line->
-            {
-                String[] compound = line.split(" ");
-                //Block block = Registry.BLOCK.get(new Identifier(compound[0]));
-                matrices.push();
-                matrices.scale(-1.0F, -1.0F, 1.0F);
-                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-                matrices.translate(Double.parseDouble(compound[1]),Double.parseDouble(compound[2]),Double.parseDouble(compound[3]));
-                MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(Block.getStateFromRawId(Integer.parseInt(compound[0])),matrices, vertexConsumerProvider,light,overlay);
-                matrices.pop();
-            });
+        VertexConsumerProvider vertexConsumerProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        matrices.push();
+        matrices.scale(-1.0F, -1.0F, 1.0F);
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
+        blocks.forEach(line->
+        {
+            String[] compound = line.split(" ");
+            //Block block = Registry.BLOCK.get(new Identifier(compound[0]));
+            matrices.push();
+
+            matrices.translate(Double.parseDouble(compound[1]),Double.parseDouble(compound[2])-4,Double.parseDouble(compound[3]));
+            MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(Block.getStateFromRawId(Integer.parseInt(compound[0])),matrices, vertexConsumerProvider,light,overlay);
+            matrices.pop();
+        });
+        matrices.pop();
     }
 }
