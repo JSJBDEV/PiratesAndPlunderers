@@ -20,7 +20,10 @@
   "entrypoints": {
     "main": [
       "gd.rf.acro.pap.PiratesAndPlunderers"
-    ]
+    ],
+    "client": [{
+      "value": "gd.rf.acro.pap.ClientInit"
+    }]
   },
   "mixins": [
     "pap.mixins.json"
