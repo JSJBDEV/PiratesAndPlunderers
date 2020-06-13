@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Random;
 
 public class PortTownHandler {
-    private static void spawnStruct(ServerWorld world, BlockPos pos, String name)
+    public static void spawnStruct(ServerWorld world, BlockPos pos, String name)
     {
         StructureManager manager = world.getStructureManager();
 

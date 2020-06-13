@@ -3,9 +3,11 @@ package gd.rf.acro.pap;
 import gd.rf.acro.pap.blocks.RandomDecayingBlock;
 import gd.rf.acro.pap.blocks.ShipBuilderBlock;
 import gd.rf.acro.pap.blocks.StaticCannonBlock;
+import gd.rf.acro.pap.blocks.StructureBuilderBlock;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.AstrolabeItem;
 import gd.rf.acro.pap.items.MusketItem;
+import gd.rf.acro.pap.world.PortTownFeature;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -27,6 +29,12 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import gd.rf.acro.pap.config.ConfigLoader;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +52,13 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static final EntityType<SailingShipEntity> SAILING_BOAT_ENTITY_ENTITY_TYPE =
 			Registry.register(Registry.ENTITY_TYPE,new Identifier("pap","sail_boat")
 					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,SailingShipEntity::new).dimensions(EntityDimensions.fixed(10,10)).trackable(100,4).build());
+
+	private static final Feature<DefaultFeatureConfig> PORT_TOWN = Registry.register(
+			Registry.FEATURE,
+			new Identifier("pap", "port_town"),
+			new PortTownFeature(DefaultFeatureConfig.CODEC)
+	);
+
 	@Override
 	public void onInitialize() {
 		config = new ConfigLoader();
@@ -55,15 +70,17 @@ public class PiratesAndPlunderers implements ModInitializer {
 		logger.info("Hello Fabric world!");
     
 		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
-
+		Biomes.BEACH.addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,PORT_TOWN.configure(new DefaultFeatureConfig()).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(100))));
 	}
 	public static final ShipBuilderBlock SHIP_BUILDER_BLOCK = new ShipBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static final StructureBuilderBlock STRUCTURE_BUILDER_BLOCK = new StructureBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static final RandomDecayingBlock SHIP_BUILDER_MARKER = new RandomDecayingBlock(FabricBlockSettings.of(Material.METAL).strength(-1,3600000.0F).ticksRandomly().build());
 	public static final StaticCannonBlock STATIC_CANNON_BLOCK = new StaticCannonBlock(FabricBlockSettings.of(Material.METAL).build());
 	private void registerBlocks()
 	{
 		Registry.register(Registry.BLOCK,new Identifier("pap","ship_builder"),SHIP_BUILDER_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","ship_builder_marker"),SHIP_BUILDER_MARKER);
+		Registry.register(Registry.BLOCK,new Identifier("pap","structure_builder"),STRUCTURE_BUILDER_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","static_cannon"),STATIC_CANNON_BLOCK);
 	}
 	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(ItemGroup.MISC));
