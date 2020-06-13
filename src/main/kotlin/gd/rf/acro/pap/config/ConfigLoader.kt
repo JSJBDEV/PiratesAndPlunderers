@@ -31,17 +31,23 @@ class ConfigLoader {
          */
         DimensionHasFancySky = conf.getBoolean("dimension.fancySky")
 
+        logger.info("Loaded Configuration")
+
         copyFileIfNotExists()
     }
 
     private fun copyFileIfNotExists() {
         val file = File(configPath)
+        logger.info(file)
         if (!file.exists()) {
             try {
-                this.javaClass.classLoader.getResourceAsStream("/$defaultConfigResourcePath").use { stream -> Files.copy(stream!!, Paths.get(configPath)) }
+                this.javaClass.getResourceAsStream("/$defaultConfigResourcePath").use { stream ->
+                    Files.copy(stream!!, Paths.get(configPath))
+                }
             } catch (e: IOException) {
-                logger.fatal("Could not copy config from JAR resources, this is a non-recoverable error!")
-                throw e;
+                logger.fatal("Could not copy config from JAR resources (IOException), any custom config will not be loaded!", e)
+            } catch (e: NullPointerException) {
+                logger.error("Could not copy config from JAR resources (NullPointerException), any custom config will not be loaded!", e)
             }
         }
     }
