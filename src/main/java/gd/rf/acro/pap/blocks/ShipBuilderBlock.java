@@ -36,7 +36,8 @@ public class ShipBuilderBlock extends Block {
                     for (int k = -16; k < 16; k++) {
                         if(PiratesAndPlunderers.BOAT_MATERIAL.contains(world.getBlockState(pos.add(i,j,k)).getBlock()))
                         {
-                            complete.add(Registry.BLOCK.getId(world.getBlockState(pos.add(i,j,k)).getBlock()).toString()+" "+i+" "+k+" "+j);
+                            //complete.add(Registry.BLOCK.getId(world.getBlockState(pos.add(i,j,k)).getBlock()).toString()+" "+i+" "+j+" "+k);
+                            complete.add(Block.getRawIdFromState(world.getBlockState(pos.add(i,j,k)))+" "+i+" "+j+" "+k);
                         }
                     }
                 }

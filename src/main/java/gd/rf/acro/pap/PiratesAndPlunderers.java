@@ -29,7 +29,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 
 	public static final EntityType<SailingShipEntity> SAILING_BOAT_ENTITY_ENTITY_TYPE =
 			Registry.register(Registry.ENTITY_TYPE,new Identifier("pap","sail_boat")
-					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,SailingShipEntity::new).dimensions(EntityDimensions.fixed(10,10)).build());
+					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,SailingShipEntity::new).dimensions(EntityDimensions.fixed(10,10)).trackable(100,4).build());
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.

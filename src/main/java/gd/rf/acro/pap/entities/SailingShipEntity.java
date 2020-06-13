@@ -30,6 +30,8 @@ public class SailingShipEntity extends PigEntity {
         return true;
     }
 
+
+
     @Override
     protected void initGoals() {
 
@@ -51,7 +53,10 @@ public class SailingShipEntity extends PigEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        player.startRiding(this);
+        if(!player.getEntityWorld().isClient)
+        {
+            player.startRiding(this);
+        }
         return super.interactAt(player, hitPos, hand);
     }
 }
