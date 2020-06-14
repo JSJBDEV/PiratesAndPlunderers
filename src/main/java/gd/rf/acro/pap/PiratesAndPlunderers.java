@@ -12,6 +12,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.tag.FabricTagBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.AbstractBlock;
@@ -24,9 +26,13 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.GlobalTagAccessor;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.Registry;
 import gd.rf.acro.pap.config.ConfigLoader;
 import net.minecraft.world.biome.Biomes;
@@ -35,17 +41,28 @@ import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 
 public class PiratesAndPlunderers implements ModInitializer {
 
 	public static ConfigLoader config;
 	public static Logger logger = LogManager.getLogger();
+	public static List<Resource> buildings = new ArrayList<>();
+	public static List<Resource> ships = new ArrayList<>();
+	private static final String[] ship_names = {"ship1"};
+	private static final String[] structure_names = {"port_town_bottom_floor","port_town_farm","port_town_tannery","port_town_archery","port_town_library"};
 
 	public static final Tag<Block> BOAT_MATERIAL = TagRegistry.block(new Identifier("pap","boat_material"));
 
@@ -70,8 +87,46 @@ public class PiratesAndPlunderers implements ModInitializer {
 		logger.info("Hello Fabric world!");
     
 		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
+
 		Biomes.BEACH.addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,PORT_TOWN.configure(new DefaultFeatureConfig()).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(100))));
+
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
+			@Override
+			public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+				return CompletableFuture.runAsync(() -> {
+					try {
+
+						for (String name:ship_names)
+						{
+							FileUtils.writeLines(new File("./config/PiratesAndPlunderers/ships/"+ name+".blocks"),
+									IOUtils.readLines(manager.getResource(new Identifier("pap","ships_default/"+name+".blocks")).getInputStream(),"utf-8"));
+						}
+						for (String name:structure_names)
+						{
+							FileUtils.writeLines(new File("./config/PiratesAndPlunderers/buildings/"+ name+".blocks"),
+									IOUtils.readLines(manager.getResource(new Identifier("pap","structures_default/"+name+".blocks")).getInputStream(),"utf-8"));
+						}
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}).thenCompose(aVoid -> synchronizer.whenPrepared(null));
+			}
+
+			@Override
+			public Identifier getFabricId() {
+				return new Identifier("pap","data");
+			}
+		});
+
 	}
+
+	private static void copyDefaultFiles()
+	{
+
+	}
+
+
 	public static final ShipBuilderBlock SHIP_BUILDER_BLOCK = new ShipBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static final StructureBuilderBlock STRUCTURE_BUILDER_BLOCK = new StructureBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static final RandomDecayingBlock SHIP_BUILDER_MARKER = new RandomDecayingBlock(FabricBlockSettings.of(Material.METAL).strength(-1,3600000.0F).ticksRandomly().build());

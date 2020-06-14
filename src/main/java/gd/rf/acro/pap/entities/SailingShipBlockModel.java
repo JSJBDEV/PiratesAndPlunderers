@@ -20,22 +20,29 @@ import java.util.List;
 
 public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
     private List<String> blocks;
+    private String ship;
     @Override
     public void setAngles(SailingShipEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
     }
     public SailingShipBlockModel(String model)
     {
-        try {
-            blocks = FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+model),"utf-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.ship=model;
 
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+
+        //on first launch, the config wont exist by the time this is initiated, to solve this problems instead it loads the file on the first in game render frame
+        if(blocks==null)
+        {
+            try {
+                blocks = FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+this.ship),"utf-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         VertexConsumerProvider vertexConsumerProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
         matrices.push();

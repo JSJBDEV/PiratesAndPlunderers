@@ -1,14 +1,19 @@
 package gd.rf.acro.pap.blocks;
 
 import gd.rf.acro.pap.PiratesAndPlunderers;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,7 +32,7 @@ public class StructureBuilderBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if(!world.isClient)
+        if(!world.isClient && hand==Hand.MAIN_HAND)
         {
             //should be placed 2 blocks below where you want the water level
             List<String> complete = new ArrayList<>();
@@ -36,7 +41,8 @@ public class StructureBuilderBlock extends Block {
                 for (int j = 0; j < 32; j++) {
                     for (int k = -16; k < 16; k++) {
                         if(world.getBlockState(pos.add(i,j,k)).getBlock()!=PiratesAndPlunderers.SHIP_BUILDER_MARKER
-                                && world.getBlockState(pos.add(i,j,k)).getBlock()!=PiratesAndPlunderers.STRUCTURE_BUILDER_BLOCK)
+                                && world.getBlockState(pos.add(i,j,k)).getBlock()!=PiratesAndPlunderers.STRUCTURE_BUILDER_BLOCK
+                                && world.getBlockState(pos.add(i,j,k)).getBlock()!=Blocks.AIR)
                         {
                             complete.add(Block.getRawIdFromState(world.getBlockState(pos.add(i,j,k)))+" "+i+" "+j+" "+k);
                         }
