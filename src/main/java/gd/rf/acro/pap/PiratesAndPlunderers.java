@@ -1,6 +1,8 @@
 package gd.rf.acro.pap;
 
 import gd.rf.acro.pap.blocks.*;
+import gd.rf.acro.pap.command.CommandInit;
+import gd.rf.acro.pap.dimension.PirateOceanChunkGenerator;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.AstrolabeItem;
 import gd.rf.acro.pap.items.MusketItem;
@@ -32,6 +34,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.Registry;
 import gd.rf.acro.pap.config.ConfigLoader;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
@@ -63,6 +67,8 @@ public class PiratesAndPlunderers implements ModInitializer {
 
 	public static final Tag<Block> BOAT_MATERIAL = TagRegistry.block(new Identifier("pap","boat_material"));
 
+	public static final RegistryKey<World> PIRATE_OCEAN_WORLD = RegistryKey.of(Registry.DIMENSION, new Identifier("pap", "pirate_ocean"));
+
 	public static final EntityType<SailingShipEntity> SAILING_BOAT_ENTITY_ENTITY_TYPE =
 			Registry.register(Registry.ENTITY_TYPE,new Identifier("pap","sail_boat")
 					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,SailingShipEntity::new).dimensions(EntityDimensions.fixed(10,10)).trackable(100,4).build());
@@ -81,10 +87,11 @@ public class PiratesAndPlunderers implements ModInitializer {
 		// Proceed with mild caution.
 		registerBlocks();
 		registerItems();
+		CommandInit.INSTANCE.registerCommands();
 		logger.info("Hello Fabric world!");
     
 		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
-
+		Registry.register(Registry.CHUNK_GENERATOR, new Identifier("pap", "pirate_ocean"), PirateOceanChunkGenerator.CODEC);
 		Biomes.BEACH.addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,PORT_TOWN.configure(new DefaultFeatureConfig()).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(100))));
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
@@ -118,10 +125,6 @@ public class PiratesAndPlunderers implements ModInitializer {
 
 	}
 
-	private static void copyDefaultFiles()
-	{
-
-	}
 
 
 	public static final ShipBuilderBlock SHIP_BUILDER_BLOCK = new ShipBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
