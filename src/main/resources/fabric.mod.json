@@ -23,6 +23,9 @@
     ],
     "client": [{
       "value": "gd.rf.acro.pap.ClientInit"
+    }],
+    "server": [{
+      "value": "gd.rf.acro.pap.ServerInit"
     }]
   },
   "mixins": [
