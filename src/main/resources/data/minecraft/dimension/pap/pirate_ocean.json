@@ -3,7 +3,7 @@
     "type": "pap:pirate_ocean",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:deep_ocean"
+      "biome": "minecraft:deep_warm_ocean"
     }
   },
   "type": "pap:pirate_ocean"

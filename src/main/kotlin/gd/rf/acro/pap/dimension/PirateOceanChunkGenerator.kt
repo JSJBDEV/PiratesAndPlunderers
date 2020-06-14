@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.structure.StructureManager
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.ChunkRegion
@@ -12,24 +13,49 @@ import net.minecraft.world.WorldAccess
 import net.minecraft.world.biome.source.BiomeSource
 import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.gen.StructureAccessor
-import net.minecraft.world.gen.chunk.ChunkGenerator
-import net.minecraft.world.gen.chunk.StructuresConfig
-import net.minecraft.world.gen.chunk.VerticalBlockSample
+import net.minecraft.world.gen.chunk.*
 import java.util.*
 import java.util.function.Function
+import java.util.function.IntFunction
 
 
 class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biomeSource, StructuresConfig(Optional.empty(), emptyMap())) {
+
     override fun getColumnSample(x: Int, z: Int): BlockView? {
-        return VerticalBlockSample(arrayOfNulls(0))
+        return VerticalBlockSample(Arrays.stream(layerBlocks).map(Function { state: BlockState? ->
+            state ?: Blocks.AIR.defaultState
+        }).toArray(IntFunction { i: Int -> arrayOfNulls<BlockState>(i) }) as Array<BlockState?>)
+    }
+
+    override fun setStructureStarts(structureAccessor: StructureAccessor?, chunk: Chunk?, structureManager: StructureManager?, l: Long) {
+        // Do nothing lol
+    }
+
+    override fun addStructureReferences(world: WorldAccess?, accessor: StructureAccessor?, chunk: Chunk?) {
+        // Do nothing lol
     }
 
     override fun method_28506(): Codec<out ChunkGenerator> {
         return CODEC
     }
 
-    override fun getHeight(x: Int, z: Int, heightmapType: Heightmap.Type?): Int {
-        return 256
+    private fun fillBlockStates(blocks: Array<BlockState?>): Array<BlockState> {
+        val new = arrayOfNulls<BlockState>(this.maxY);
+        for(i in 0..this.maxY) {
+            new[i] = blocks[i] ?: Blocks.AIR.defaultState
+        }
+        return new as Array<BlockState>
+    }
+
+    override fun getSpawnHeight(): Int {
+        val blockStates: Array<BlockState?> = layerBlocks
+        for (i in blockStates.indices) {
+            val blockState = (if (blockStates[i] == null) Blocks.AIR.defaultState else blockStates[i])!!
+            if (!Heightmap.Type.MOTION_BLOCKING.blockPredicate.test(blockState)) {
+                return i - 1
+            }
+        }
+        return blockStates.size
     }
 
     override fun buildSurface(region: ChunkRegion?, chunk: Chunk?) {
@@ -37,7 +63,7 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
     }
 
     override fun populateNoise(world: WorldAccess?, accessor: StructureAccessor?, chunk: Chunk?) {
-        val blockStates: Array<BlockState> = layerBlocks;
+        val blockStates: Array<BlockState?> = layerBlocks;
         val mutable = BlockPos.Mutable()
         val heightmap = chunk!!.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG)
         val heightmap2 = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG)
@@ -61,6 +87,17 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
         return this
     }
 
+    override fun getHeight(x: Int, z: Int, heightmapType: Heightmap.Type): Int {
+        val blockStates: Array<BlockState?> = layerBlocks;
+        for (i in blockStates.indices.reversed()) {
+            val blockState = blockStates[i]
+            if (blockState != null && heightmapType.blockPredicate.test(blockState)) {
+                return i + 1
+            }
+        }
+        return 0
+    }
+
     companion object {
         @JvmField
         val CODEC: Codec<PirateOceanChunkGenerator> = RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<PirateOceanChunkGenerator> ->
@@ -82,11 +119,8 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
             for (i in 17..64) {
                 blk[i] = Blocks.WATER.defaultState!!
             }
-            for (i in 65..255) {
-                blk[i] = Blocks.AIR.defaultState!!
-            }
             blk
-        }() as Array<BlockState>
+        }()
 
     }
 }
