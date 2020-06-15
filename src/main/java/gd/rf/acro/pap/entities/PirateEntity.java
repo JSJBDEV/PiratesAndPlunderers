@@ -26,6 +26,7 @@ import java.util.List;
 public class PirateEntity extends SkeletonEntity {
     public PirateEntity(EntityType<? extends SkeletonEntity> entityType, World world) {
         super(entityType, world);
+        this.equipStack(EquipmentSlot.HEAD,new ItemStack(Items.DIAMOND_HELMET));
     }
 
     @Override
@@ -71,9 +72,4 @@ public class PirateEntity extends SkeletonEntity {
         }
     }
 
-    @Override
-    protected void initEquipment(LocalDifficulty difficulty) {
-        super.initEquipment(difficulty);
-        this.equipStack(EquipmentSlot.HEAD,new ItemStack(Items.DIAMOND_HELMET));
-    }
 }
