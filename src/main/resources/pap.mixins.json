@@ -4,9 +4,9 @@
   "package": "gd.rf.acro.pap.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "VillagerTradesMixin"
   ],
   "client": [
-    "ExampleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
