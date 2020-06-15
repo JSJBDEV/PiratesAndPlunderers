@@ -3,6 +3,7 @@ package gd.rf.acro.pap;
 import gd.rf.acro.pap.blocks.*;
 import gd.rf.acro.pap.command.CommandInit;
 import gd.rf.acro.pap.dimension.PirateOceanChunkGenerator;
+import gd.rf.acro.pap.entities.PirateEntity;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.AstrolabeItem;
 import gd.rf.acro.pap.items.MusketItem;
@@ -82,6 +83,12 @@ public class PiratesAndPlunderers implements ModInitializer {
 			Registry.register(Registry.ENTITY_TYPE,new Identifier("pap","sail_boat")
 					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,SailingShipEntity::new).dimensions(EntityDimensions.fixed(10,10)).trackable(100,4).build());
 
+	public static final EntityType<PirateEntity> PIRATE_ENTITY_ENTITY_TYPE =
+			Registry.register(Registry.ENTITY_TYPE,new Identifier("pap","pirate")
+					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,PirateEntity::new).dimensions(EntityDimensions.fixed(1,2)).trackable(100,4).build());
+
+
+
 	private static final Feature<DefaultFeatureConfig> PORT_TOWN = Registry.register(
 			Registry.FEATURE,
 			new Identifier("pap", "port_town"),
@@ -103,6 +110,9 @@ public class PiratesAndPlunderers implements ModInitializer {
 		logger.info("Hello Fabric world!");
     
 		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
+		FabricDefaultAttributeRegistry.register(PIRATE_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
+
+
 		Registry.register(Registry.CHUNK_GENERATOR, new Identifier("pap", "pirate_ocean"), PirateOceanChunkGenerator.CODEC);
 		Biomes.BEACH.addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,PORT_TOWN.configure(new DefaultFeatureConfig()).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(100))));
 		Registry.register(Registry.VILLAGER_PROFESSION,new Identifier("pap","shipwright_prof"),SHIPWRIGHT);
