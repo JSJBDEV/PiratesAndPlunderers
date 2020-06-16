@@ -7,10 +7,12 @@ import gd.rf.acro.pap.entities.PirateEntity;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.AstrolabeItem;
 import gd.rf.acro.pap.items.MusketItem;
+import gd.rf.acro.pap.items.RecruitmentBookItem;
 import gd.rf.acro.pap.world.PortTownFeature;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
@@ -29,6 +31,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -75,6 +78,10 @@ public class PiratesAndPlunderers implements ModInitializer {
 	private static final String[] ship_names = {"ship1"};
 	private static final String[] structure_names = {"port_town_bottom_floor","port_town_farm","port_town_tannery","port_town_archery","port_town_library"};
 
+	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
+			new Identifier("pap", "pap_tab"),
+			() -> new ItemStack(PiratesAndPlunderers.ASTROLABE_ITEM));
+	
 	public static final Tag<Block> BOAT_MATERIAL = TagRegistry.block(new Identifier("pap","boat_material"));
 
 	public static final RegistryKey<World> PIRATE_OCEAN_WORLD = RegistryKey.of(Registry.DIMENSION, new Identifier("pap", "pirate_ocean"));
@@ -94,9 +101,8 @@ public class PiratesAndPlunderers implements ModInitializer {
 			new Identifier("pap", "port_town"),
 			new PortTownFeature(DefaultFeatureConfig.CODEC)
 	);
-	public static final PointOfInterestType SHIPWRIGHT_POI = PointOfInterestHelper.register(new Identifier("pap","shipwright_poi"),1,50, Blocks.GOLD_BLOCK);
-	public static final VillagerProfession SHIPWRIGHT = VillagerProfessionBuilder.create().id(new Identifier("pap","shipwright")).workstation(SHIPWRIGHT_POI).build();
-
+	public static PointOfInterestType SHIPWRIGHT_POI;
+	public static VillagerProfession SHIPWRIGHT;
 
 	@Override
 	public void onInitialize() {
@@ -106,6 +112,8 @@ public class PiratesAndPlunderers implements ModInitializer {
 		// Proceed with mild caution.
 		registerBlocks();
 		registerItems();
+		SHIPWRIGHT_POI = PointOfInterestHelper.register(new Identifier("pap","shipwright_poi"),1,50, PiratesAndPlunderers.SHIPWRIGHTS_TABLE);
+		SHIPWRIGHT = VillagerProfessionBuilder.create().id(new Identifier("pap","shipwright")).workstation(SHIPWRIGHT_POI).build();
 		CommandInit.INSTANCE.registerCommands();
 		logger.info("Hello Fabric world!");
     
@@ -155,6 +163,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static final RandomDecayingBlock SHIP_BUILDER_MARKER = new RandomDecayingBlock(FabricBlockSettings.of(Material.METAL).strength(-1,3600000.0F).ticksRandomly().build());
 	public static final StaticCannonBlock STATIC_CANNON_BLOCK = new StaticCannonBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static final StaticMobSpawner STATIC_MOB_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build());
+	public static final Block SHIPWRIGHTS_TABLE = new Block(FabricBlockSettings.of(Material.WOOD).build());
 	private void registerBlocks()
 	{
 		Registry.register(Registry.BLOCK,new Identifier("pap","ship_builder"),SHIP_BUILDER_BLOCK);
@@ -162,15 +171,20 @@ public class PiratesAndPlunderers implements ModInitializer {
 		Registry.register(Registry.BLOCK,new Identifier("pap","structure_builder"),STRUCTURE_BUILDER_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","static_cannon"),STATIC_CANNON_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","static_mob_spawner"),STATIC_MOB_SPAWNER);
+		Registry.register(Registry.BLOCK,new Identifier("pap","shipwrights_table"),SHIPWRIGHTS_TABLE);
 	}
-	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(ItemGroup.MISC));
-	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(ItemGroup.MISC));
-	public static final AstrolabeItem ASTROLABE_ITEM = new AstrolabeItem(new Item.Settings().group(ItemGroup.MISC));
+	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(TAB));
+	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(TAB));
+	public static final AstrolabeItem ASTROLABE_ITEM = new AstrolabeItem(new Item.Settings().group(TAB));
+	public static final RecruitmentBookItem RECRUITMENT_BOOK_ITEM = new RecruitmentBookItem(new Item.Settings().group(TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("pap","musket"),MUSKET_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","blunderbuss"),BLUNDERBUSS_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","astrolabe"),ASTROLABE_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("pap","recruitment_book"),RECRUITMENT_BOOK_ITEM);
+		Registry.register(Registry.ITEM, new Identifier("pap", "static_cannon"), new BlockItem(STATIC_CANNON_BLOCK, new Item.Settings().group(TAB)));
+		Registry.register(Registry.ITEM, new Identifier("pap", "shipwrights_table"), new BlockItem(SHIPWRIGHTS_TABLE, new Item.Settings().group(TAB)));
 	}
 
 

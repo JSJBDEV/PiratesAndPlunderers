@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "pap:block/static_cannon" },
+    "facing=east": { "model": "pap:block/static_cannon", "y":  90 },
+    "facing=south": { "model": "pap:block/static_cannon", "y":  180 },
+    "facing=west": { "model": "pap:block/static_cannon", "y":  270 }
+  }
+}
