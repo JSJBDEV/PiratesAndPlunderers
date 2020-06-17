@@ -1,9 +1,7 @@
-# Fabric Example Mod
+# Pirates And Plunderers
 
-## Setup
+A pirate themed adventure, exploration and fantasy mod for 1.16
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+CCDevs entry to [modfest 1.16](https://modfest.net/1.16/)
 
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This is unsurprisingly a mod for FabricMC, as that was what the competition was on

@@ -1,6 +1,7 @@
 package gd.rf.acro.pap.blocks;
 
 import gd.rf.acro.pap.PiratesAndPlunderers;
+import gd.rf.acro.pap.entities.PirateEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,8 +21,10 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class StaticMobSpawner extends Block {
-    public StaticMobSpawner(Settings settings) {
+    private EntityType spawnType;
+    public StaticMobSpawner(Settings settings,EntityType type) {
         super(settings);
+        this.spawnType=type;
     }
 
 
@@ -29,11 +32,18 @@ public class StaticMobSpawner extends Block {
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.scheduledTick(state, world, pos, random);
-        VillagerEntity entity = new VillagerEntity(EntityType.VILLAGER,world);
-        entity.teleport(pos.getX(),pos.getY(),pos.getZ());
-        entity.setVillagerData(entity.getVillagerData().withProfession(PiratesAndPlunderers.SHIPWRIGHT));
-
-        world.spawnEntity(entity);
+        if(spawnType==EntityType.VILLAGER)
+        {
+            VillagerEntity entity = new VillagerEntity(EntityType.VILLAGER,world);
+            entity.teleport(pos.getX(),pos.getY(),pos.getZ());
+            world.spawnEntity(entity);
+        }
+        if(spawnType==PiratesAndPlunderers.PIRATE_ENTITY_ENTITY_TYPE)
+        {
+            PirateEntity entity = new PirateEntity(PiratesAndPlunderers.PIRATE_ENTITY_ENTITY_TYPE,world);
+            entity.teleport(pos.getX(),pos.getY(),pos.getZ());
+            world.spawnEntity(entity);
+        }
         world.setBlockState(pos, Blocks.AIR.getDefaultState());
     }
 }

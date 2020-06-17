@@ -168,7 +168,8 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static final StructureBuilderBlock STRUCTURE_BUILDER_BLOCK = new StructureBuilderBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static final RandomDecayingBlock SHIP_BUILDER_MARKER = new RandomDecayingBlock(FabricBlockSettings.of(Material.METAL).strength(-1,3600000.0F).ticksRandomly().build());
 	public static final StaticCannonBlock STATIC_CANNON_BLOCK = new StaticCannonBlock(FabricBlockSettings.of(Material.METAL).build());
-	public static final StaticMobSpawner STATIC_MOB_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build());
+	public static final StaticMobSpawner STATIC_MOB_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build(),EntityType.VILLAGER);
+    public static final StaticMobSpawner STATIC_PIRATE_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build(),PIRATE_ENTITY_ENTITY_TYPE);
 	public static final Block SHIPWRIGHTS_TABLE = new Block(FabricBlockSettings.of(Material.WOOD).build());
 	private void registerBlocks()
 	{
@@ -177,6 +178,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 		Registry.register(Registry.BLOCK,new Identifier("pap","structure_builder"),STRUCTURE_BUILDER_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","static_cannon"),STATIC_CANNON_BLOCK);
 		Registry.register(Registry.BLOCK,new Identifier("pap","static_mob_spawner"),STATIC_MOB_SPAWNER);
+        Registry.register(Registry.BLOCK,new Identifier("pap","static_pirate_spawner"),STATIC_PIRATE_SPAWNER);
 		Registry.register(Registry.BLOCK,new Identifier("pap","shipwrights_table"),SHIPWRIGHTS_TABLE);
 	}
 	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(TAB));
