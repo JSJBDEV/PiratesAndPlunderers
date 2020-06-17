@@ -19,6 +19,8 @@ class ConfigLoader {
      */
 
     var DimensionHasFancySky: Boolean;
+    var DimensionEngagementSpacingBlocks: Int;
+    var DimensionEngagmentLimit: Int;
 
     init {
         val configFile = File(configPath);
@@ -30,6 +32,8 @@ class ConfigLoader {
          * Set the variable here
          */
         DimensionHasFancySky = conf.getBoolean("dimension.fancySky")
+        DimensionEngagementSpacingBlocks = conf.getInt("dimension.engagements.spacing")
+        DimensionEngagmentLimit = conf.getInt("dimension.engagements.limit")
 
         logger.info("Loaded Configuration")
 

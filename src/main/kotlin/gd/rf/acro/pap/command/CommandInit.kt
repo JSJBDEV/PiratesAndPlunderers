@@ -8,7 +8,8 @@ import net.minecraft.server.command.ServerCommandSource
 object CommandInit {
     fun registerCommands() {
         CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher: CommandDispatcher<ServerCommandSource?>?, dedicated: Boolean ->
-            EngageCommand.register(dispatcher!!)
+            EngageStartCommand.register(dispatcher!!)
+            EngageWorldManageCommand.register(dispatcher)
         })
     }
 }

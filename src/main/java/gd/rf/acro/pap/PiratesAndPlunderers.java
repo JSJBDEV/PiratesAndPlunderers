@@ -76,7 +76,13 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static ConfigLoader config;
 	public static Logger logger = LogManager.getLogger();
 	private static final String[] ship_names = {"ship1"};
-	private static final String[] structure_names = {"port_town_bottom_floor","port_town_farm","port_town_tannery","port_town_archery","port_town_library"};
+	private static final String[] structure_names = {
+		"port_town_bottom_floor",
+		"port_town_farm",
+		"port_town_tannery",
+		"port_town_archery",
+		"port_town_library"
+	};
 
 	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
 			new Identifier("pap", "pap_tab"),

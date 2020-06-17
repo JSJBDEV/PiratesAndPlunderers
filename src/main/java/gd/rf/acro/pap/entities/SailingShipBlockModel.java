@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.io.FileUtils;
+import static gd.rf.acro.pap.PiratesAndPlunderers.logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
             try {
                 blocks = FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+this.ship),"utf-8");
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error reading blocks file.", e);
             }
         }
 

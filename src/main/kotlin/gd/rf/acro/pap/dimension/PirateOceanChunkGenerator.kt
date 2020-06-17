@@ -39,14 +39,6 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
         return CODEC
     }
 
-    private fun fillBlockStates(blocks: Array<BlockState?>): Array<BlockState> {
-        val new = arrayOfNulls<BlockState>(this.maxY);
-        for(i in 0..this.maxY) {
-            new[i] = blocks[i] ?: Blocks.AIR.defaultState
-        }
-        return new as Array<BlockState>
-    }
-
     override fun getSpawnHeight(): Int {
         val blockStates: Array<BlockState?> = layerBlocks
         for (i in blockStates.indices) {
@@ -108,7 +100,7 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
         }
 
         //private val layerBlocks = arrayOfNulls<BlockState>(256);
-        private val layerBlocks = {
+        val layerBlocks = {
             val blk = arrayOfNulls<BlockState>(256)
             for(i in 0..3) {
                 blk[i] = Blocks.BEDROCK.defaultState!!
@@ -121,6 +113,14 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
             }
             blk
         }()
+
+        fun getFilledBlockStates(): Array<BlockState> {
+            val new = arrayOfNulls<BlockState>(256);
+            for(i in 0..256) {
+                new[i] = layerBlocks[i] ?: Blocks.AIR.defaultState
+            }
+            return new as Array<BlockState>
+        }
 
     }
 }
