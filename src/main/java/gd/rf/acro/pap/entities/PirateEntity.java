@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class PirateEntity extends SkeletonEntity {
     public PirateEntity(EntityType<? extends SkeletonEntity> entityType, World world) {
@@ -40,7 +41,10 @@ public class PirateEntity extends SkeletonEntity {
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(6, new LookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(2, new FollowTargetGoal(this, PlayerEntity.class, true));
+        this.targetSelector.add(2, new FollowTargetGoal<>(this, PlayerEntity.class,10, true,false,
+                v-> this.getScoreboardTeam()!=v.getScoreboardTeam()||this.getScoreboardTeam()==null));
+        this.targetSelector.add(2, new FollowTargetGoal<>(this, PirateEntity.class,10, true,false,
+                v-> this.getScoreboardTeam()!=v.getScoreboardTeam()||this.getScoreboardTeam()==null));
 
     }
 
