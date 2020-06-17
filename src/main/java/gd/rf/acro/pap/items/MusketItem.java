@@ -1,5 +1,6 @@
 package gd.rf.acro.pap.items;
 
+import gd.rf.acro.pap.PiratesAndPlunderers;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
@@ -24,14 +25,18 @@ import java.util.List;
 import java.util.Random;
 
 public class MusketItem extends Item {
-    public MusketItem(Settings settings) {
+    int minDamage;
+    int maxDamage;
+    public MusketItem(Settings settings,int min, int max) {
         super(settings);
+        this.minDamage=min;
+        this.maxDamage=max;
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
-        if(true)
+        if(user.inventory.count(PiratesAndPlunderers.SHOT_ITEM)>0)
         {
             //mostly modified from GuardianEntity
             user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,1,1);
@@ -50,12 +55,18 @@ public class MusketItem extends Item {
             user.getStackInHand(hand).damage(1,user,(dobreak)-> dobreak.sendToolBreakStatus(hand));
             if(livingEntity!=null)
             {
-                livingEntity.damage(new EntityDamageSource("pap_shot",user), RandomUtils.nextFloat(1,7));
+                livingEntity.damage(new EntityDamageSource("pap_shot",user), RandomUtils.nextFloat(this.minDamage,this.maxDamage));
             }
             while(j < h) {
                 j += 1.8D - d + random.nextDouble() * (1.7D - d);
                 world.addParticle(ParticleTypes.SMOKE, user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 0.0D, 0.0D, 0.0D);
              }
+            for (ItemStack item : user.inventory.main) {
+                if (item.getItem() == PiratesAndPlunderers.SHOT_ITEM) {
+                    item.decrement(1);
+                    break;
+                }
+            }
 
         }
         return super.use(world, user, hand);
@@ -64,6 +75,6 @@ public class MusketItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new LiteralText("1-6 damage"));
+        tooltip.add(new LiteralText(this.minDamage+"-"+maxDamage+" damage"));
     }
 }

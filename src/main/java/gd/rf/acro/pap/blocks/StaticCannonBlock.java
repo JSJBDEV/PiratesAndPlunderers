@@ -32,7 +32,7 @@ public class StaticCannonBlock extends HorizontalFacingBlock {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if(hand==Hand.MAIN_HAND && player.getStackInHand(hand).getItem()==PiratesAndPlunderers.ASTROLABE_ITEM)
         {
-            if(player.getStackInHand(hand).hasTag())
+            if(player.getStackInHand(hand).hasTag() && player.inventory.count(PiratesAndPlunderers.CANNON_SHOT_ITEM)>0)
             {
                 Vec3d dir = Vec3d.of(hit.getSide().getOpposite().getVector());
                 FireballEntity entity = new FireballEntity(world,pos.getX()+0.5+dir.x*2,pos.getY()+0.5+dir.y*2,pos.getZ()+0.5+dir.z*2,0,-0.01,0);
@@ -42,6 +42,12 @@ public class StaticCannonBlock extends HorizontalFacingBlock {
                 BlockPos target = new BlockPos(tag.getDouble("x"),tag.getDouble("y"),tag.getDouble("z"));
                 entity.setVelocity(Vec3d.ofCenter(target.add(-pos.getX(),-pos.getY(),-pos.getZ())).multiply(3/Math.sqrt(pos.getSquaredDistance(tag.getDouble("x"),tag.getDouble("y"),tag.getDouble("z"),false))));
                 world.spawnEntity(entity);
+                for (ItemStack item : player.inventory.main) {
+                    if (item.getItem() == PiratesAndPlunderers.CANNON_SHOT_ITEM) {
+                        item.decrement(1);
+                        break;
+                    }
+                }
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

@@ -181,14 +181,18 @@ public class PiratesAndPlunderers implements ModInitializer {
         Registry.register(Registry.BLOCK,new Identifier("pap","static_pirate_spawner"),STATIC_PIRATE_SPAWNER);
 		Registry.register(Registry.BLOCK,new Identifier("pap","shipwrights_table"),SHIPWRIGHTS_TABLE);
 	}
-	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(TAB));
-	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(TAB));
+	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(TAB),3,8);
+	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(TAB),1,6);
 	public static final AstrolabeItem ASTROLABE_ITEM = new AstrolabeItem(new Item.Settings().group(TAB));
 	public static final RecruitmentBookItem RECRUITMENT_BOOK_ITEM = new RecruitmentBookItem(new Item.Settings().group(TAB));
+	public static final Item SHOT_ITEM = new Item(new Item.Settings().group(TAB));
+	public static final Item CANNON_SHOT_ITEM = new Item(new Item.Settings().group(TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("pap","musket"),MUSKET_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","blunderbuss"),BLUNDERBUSS_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("pap","shot"),SHOT_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("pap","cannon_shot"),CANNON_SHOT_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","astrolabe"),ASTROLABE_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","recruitment_book"),RECRUITMENT_BOOK_ITEM);
 		Registry.register(Registry.ITEM, new Identifier("pap", "static_cannon"), new BlockItem(STATIC_CANNON_BLOCK, new Item.Settings().group(TAB)));
