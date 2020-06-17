@@ -1,5 +1,6 @@
 package gd.rf.acro.pap.entities;
 
+import com.sun.jna.platform.win32.WinNT;
 import gd.rf.acro.pap.engagement.NoCurrentEngagementException;
 import gd.rf.acro.pap.PiratesAndPlunderers;
 import net.minecraft.block.Block;
@@ -53,7 +54,7 @@ public class SailingShipEntity extends PigEntity {
         for (String line : data) {
             String[] compound = line.split(" ");
 
-            BlockPos pos = new BlockPos(Integer.parseInt(compound[1]), Integer.parseInt(compound[1])-4, Integer.parseInt(compound[1]));
+            BlockPos pos = new BlockPos(Integer.parseInt(compound[1]), Integer.parseInt(compound[2])-4, Integer.parseInt(compound[3]));
             BlockState block = Block.getStateFromRawId(Integer.parseInt(compound[0]));
 
             result.add(new Pair<>(block, pos));
@@ -62,6 +63,11 @@ public class SailingShipEntity extends PigEntity {
     }
 
     public List<Pair<BlockState, BlockPos>> getModelBlocksForEntity() throws IOException {
+        if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()== Items.OAK_PLANKS)
+        {
+            CompoundTag tag = this.getEquippedStack(EquipmentSlot.CHEST).getTag();
+            return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/"+tag.getString("model")+".blocks"),"utf-8"));
+        }
         return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/ship1.blocks"),"utf-8"));
     }
 
@@ -138,12 +144,21 @@ public class SailingShipEntity extends PigEntity {
         {
             player.startRiding(this,true);
         }
-        if(!player.getEntityWorld().isClient && player.getStackInHand(hand).getItem()==Items.DIAMOND)
+        if(!player.getEntityWorld().isClient && player.getStackInHand(hand).getItem()==PiratesAndPlunderers.RECRUITMENT_BOOK_ITEM)
         {
-            PirateEntity entity = new PirateEntity(PiratesAndPlunderers.PIRATE_ENTITY_ENTITY_TYPE,player.getEntityWorld());
-            entity.teleport(this.getX(),this.getY(),this.getZ());
-            player.getEntityWorld().spawnEntity(entity);
-            entity.startRiding(this,true);
+            if(player.getStackInHand(hand).hasTag())
+            {
+                CompoundTag tag = player.getStackInHand(hand).getTag();
+
+                for (int i = 0; i < tag.getInt("crew"); i++) {
+                    PirateEntity entity = new PirateEntity(PiratesAndPlunderers.PIRATE_ENTITY_ENTITY_TYPE,player.getEntityWorld());
+                    entity.teleport(this.getX(),this.getY(),this.getZ());
+                    player.getEntityWorld().spawnEntity(entity);
+                    entity.startRiding(this,true);
+                }
+                tag.putInt("crew",0);
+
+            }
         }
         return super.interactAt(player, hitPos, hand);
     }

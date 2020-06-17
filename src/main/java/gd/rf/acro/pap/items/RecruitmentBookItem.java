@@ -1,5 +1,6 @@
 package gd.rf.acro.pap.items;
 
+import gd.rf.acro.pap.PiratesAndPlunderers;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +26,8 @@ public class RecruitmentBookItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(!user.getItemCooldownManager().isCoolingDown(this) && hand==Hand.MAIN_HAND && !world.isClient)
         {
-            int searchrange = 20;
+            int searchrange = PiratesAndPlunderers.config.getRecruitmentSearchRange();
+            int chanceMax = PiratesAndPlunderers.config.getVillagerRecruitmentChance();
             List<VillagerEntity> villagers = user.getEntityWorld().getEntities(
                 VillagerEntity.class,
                 new Box(user.getBlockPos().add(0-searchrange,0-searchrange,0-searchrange),user.getBlockPos().add(searchrange,searchrange,searchrange)),VillagerEntity::isAlive);
@@ -35,14 +37,14 @@ public class RecruitmentBookItem extends Item {
                 tag=user.getStackInHand(hand).getTag();
             }
             for (VillagerEntity villager : villagers) {
-                if (RandomUtils.nextInt(0, 10) == 0) {
+                if (RandomUtils.nextInt(0, chanceMax) == 0) {
                     user.sendMessage(new LiteralText("A villager has joined your crew"), false);
                     if (tag.contains("crew")) {
                         tag.putInt("crew", tag.getInt("crew") + 1);
                     } else {
                         tag.putInt("crew", 1);
                     }
-                    villager.teleport(0, -50, 0);
+                    villager.teleport(0, -250, 0);
                 }
             }
             user.getStackInHand(hand).setTag(tag);

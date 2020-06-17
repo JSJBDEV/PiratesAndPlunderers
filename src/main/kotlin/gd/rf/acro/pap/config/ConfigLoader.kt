@@ -21,6 +21,8 @@ class ConfigLoader {
     var DimensionHasFancySky: Boolean;
     var DimensionEngagementSpacingBlocks: Int;
     var DimensionEngagmentLimit: Int;
+    var RecruitmentSearchRange: Int;
+    var VillagerRecruitmentChance: Int;
 
     init {
         val configFile = File(configPath);
@@ -32,6 +34,10 @@ class ConfigLoader {
          * Set the variable here
          */
         DimensionHasFancySky = conf.getBoolean("dimension.fancySky")
+        RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
+        VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");
+        RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
+        VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");
         DimensionEngagementSpacingBlocks = conf.getInt("dimension.engagements.spacing")
         DimensionEngagmentLimit = conf.getInt("dimension.engagements.limit")
 
