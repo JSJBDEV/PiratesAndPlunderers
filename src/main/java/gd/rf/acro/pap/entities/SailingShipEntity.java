@@ -3,6 +3,7 @@ package gd.rf.acro.pap.entities;
 import com.sun.jna.platform.win32.WinNT;
 import gd.rf.acro.pap.engagement.NoCurrentEngagementException;
 import gd.rf.acro.pap.PiratesAndPlunderers;
+import gd.rf.acro.pap.lib.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,7 +23,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -54,7 +54,7 @@ public class SailingShipEntity extends PigEntity {
         for (String line : data) {
             String[] compound = line.split(" ");
 
-            BlockPos pos = new BlockPos(Integer.parseInt(compound[1]), Integer.parseInt(compound[2])-4, Integer.parseInt(compound[3]));
+            BlockPos pos = new BlockPos(Integer.parseInt(compound[1]), Integer.parseInt(compound[2]), Integer.parseInt(compound[3]));
             BlockState block = Block.getStateFromRawId(Integer.parseInt(compound[0]));
 
             result.add(new Pair<>(block, pos));

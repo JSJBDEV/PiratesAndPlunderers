@@ -1,16 +1,18 @@
 package gd.rf.acro.pap.engagement
 
-import com.google.common.io.Files
 import gd.rf.acro.pap.PiratesAndPlunderers
 import gd.rf.acro.pap.PiratesAndPlunderers.logger
 import gd.rf.acro.pap.PiratesAndPlunderers.config
 import gd.rf.acro.pap.dimension.PirateOceanChunkGenerator
 import gd.rf.acro.pap.dimension.VoidPlacementHandler.enter
 import gd.rf.acro.pap.entities.SailingShipEntity
+import gd.rf.acro.pap.lib.VectorHelper
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
+import net.fabricmc.loader.util.sat4j.core.Vec
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.server.world.ServerChunkManager
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.util.math.BlockPos
@@ -82,6 +84,10 @@ object EngagementManager {
         val attackerEntities = attacker.passengerList
         val defenderEntities = defender.passengerList
 
+        val midPosition = VectorHelper.getMidpoint(attacker.blockPos, defender.blockPos)
+        val attackerOffset = VectorHelper.subtract(midPosition, attacker.blockPos)
+        val defenderOffset = VectorHelper.subtract(midPosition, defender.blockPos)
+
         val serverWorld: ServerWorld;
 
         try {
@@ -91,19 +97,47 @@ object EngagementManager {
         }
         val oceanWorld = serverWorld.server.getWorld(PiratesAndPlunderers.PIRATE_OCEAN_WORLD)!!
 
+        val attackerBlocks = rotateBlockModel90Clockwise(attacker.modelBlocksForEntity.toTypedArray())
+        val defenderBlocks = rotateBlockModel90Clockwise(rotateBlockModel180(defender.modelBlocksForEntity.toTypedArray()))
 
-        val attackerBlocks = attacker.modelBlocksForEntity;
-        val defenderBlocks = defender.modelBlocksForEntity;
+        val engagementPositionBase = BlockPos(0, 64, 0)
 
-        val initialPosition = BlockPos(0, 64, 0)
+        val initialAttackerPosition = engagementPositionBase.add(attackerOffset)
+        val initialDefenderPosition = engagementPositionBase.add(defenderOffset)
 
         for (blk in attackerBlocks) {
-            oceanWorld.setBlockState(initialPosition.add(blk.right), blk.left, 3)
-            logger.info("PLACE BLOCK AT ${initialPosition.add(blk.right)}")
+            oceanWorld.setBlockState(initialAttackerPosition.add(blk.second), blk.first, 3)
         }
+
+        for (blk in defenderBlocks) {
+            oceanWorld.setBlockState(initialDefenderPosition.add(blk.second), blk.first, 3)
+        }
+
+        //TODO: Use entity placers
+
+        for (e in attackerEntities)
+            FabricDimensions.teleport(e, oceanWorld);
+
+        for (e in defenderEntities)
+            FabricDimensions.teleport(e, oceanWorld);
     }
 
-    fun canShipsEngage(attacker: SailingShipEntity, defender: SailingShipEntity): Boolean {
+    private fun rotateBlockModel90Clockwise(blocks: Array<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>>): Array<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>> {
+        val newBlocks = arrayOfNulls<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>>(blocks.size)
+        for(index in blocks.indices) {
+            val pos = blocks[index].second
+            val z = -1*pos.x
+            val x = pos.z
+            newBlocks[index] = gd.rf.acro.pap.lib.Pair(blocks[index].first, BlockPos(x, pos.y, z))
+        }
+        return newBlocks as Array<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>>
+    }
+
+    private fun rotateBlockModel180(blocks: Array<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>>): Array<gd.rf.acro.pap.lib.Pair<BlockState, BlockPos>> {
+        return rotateBlockModel90Clockwise(rotateBlockModel90Clockwise(blocks))
+    }
+
+    private fun canShipsEngage(attacker: SailingShipEntity, defender: SailingShipEntity): Boolean {
         return !attacker.isEngaged and !defender.isEngaged
     }
 
