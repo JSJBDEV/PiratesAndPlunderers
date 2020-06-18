@@ -1,30 +1,31 @@
 package gd.rf.acro.pap.entities;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.Items;
 import org.apache.commons.io.FileUtils;
-import static gd.rf.acro.pap.PiratesAndPlunderers.logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static gd.rf.acro.pap.PiratesAndPlunderers.logger;
 
 public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
     private List<String> blocks;
     private String ship;
     @Override
     public void setAngles(SailingShipEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-
+        if(entity.getEquippedStack(EquipmentSlot.CHEST).getItem()== Items.OAK_PLANKS)
+        {
+            this.ship =entity.getEquippedStack(EquipmentSlot.CHEST).getTag().getString("model");
+        }
     }
     public SailingShipBlockModel(String model)
     {

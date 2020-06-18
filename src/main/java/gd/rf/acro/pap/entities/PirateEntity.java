@@ -3,31 +3,138 @@ package gd.rf.acro.pap.entities;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.LocalDifficulty;
+import net.minecraft.text.LiteralText;
 import net.minecraft.world.World;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import org.apache.commons.lang3.RandomUtils;
 
 public class PirateEntity extends SkeletonEntity {
+    private static final String[] names = {"Achilles",
+            "Adonis",
+            "Adrian",
+            "Aegeus",
+            "Alec",
+            "Alesandro",
+            "Basil",
+            "Barak",
+            "Belen",
+            "Bemus",
+            "Caesar",
+            "Calix",
+            "Christophe",
+            "Cicero",
+            "Claus",
+            "Cole",
+            "Constantine",
+            "Corban",
+            "Cy",
+            "Damen",
+            "Darius",
+            "Deacon",
+            "Demitrius",
+            "Dennis",
+            "Deo",
+            "Dru",
+            "Egan",
+            "Eros",
+            "Estevan",
+            "Eugene",
+            "Evan",
+            "Ezio",
+            "Faustus",
+            "Felipe",
+            "Flavian",
+            "George",
+            "Giles",
+            "Gregory",
+            "Griffin",
+            "Hercules",
+            "Homer",
+            "Icarus",
+            "Isidore",
+            "Jace",
+            "Jerry",
+            "Jorges",
+            "Julian",
+            "Kal",
+            "Karan",
+            "Keelan",
+            "Kosmos",
+            "Kristo",
+            "Kyril",
+            "Lander",
+            "Layland",
+            "Leo",
+            "Magus",
+            "Mateo",
+            "Maximus",
+            "Miles",
+            "Moe",
+            "Neo",
+            "Nicholas",
+            "Nicos",
+            "Niles",
+            "Nyke",
+            "Obelius",
+            "Odell",
+            "Odysseus",
+            "Orien",
+            "Orrin",
+            "Othello",
+            "Otis",
+            "Owen",
+            "Pancras",
+            "Pearce",
+            "Philip",
+            "Phoenix",
+            "Proteus",
+            "Quinn",
+            "Rastus",
+            "Sander",
+            "Santos",
+            "Sirius",
+            "Spiro",
+            "Stavros",
+            "Tadd",
+            "Tassos",
+            "Theo",
+            "Timon",
+            "Titan",
+            "Tomaso",
+            "Tyrone",
+            "Ulysses",
+            "Urion",
+            "Vasilios",
+            "Vitalis",
+            "Xander"};
+
+
     public PirateEntity(EntityType<? extends SkeletonEntity> entityType, World world) {
         super(entityType, world);
         this.equipStack(EquipmentSlot.HEAD,new ItemStack(Items.DIAMOND_HELMET));
+        this.setCustomName(new LiteralText(names[RandomUtils.nextInt(0,names.length)]+" "+names[RandomUtils.nextInt(0,names.length)]));
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_PILLAGER_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.ENTITY_PILLAGER_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_PILLAGER_DEATH;
     }
 
     @Override
@@ -54,7 +161,7 @@ public class PirateEntity extends SkeletonEntity {
 
         if(this.getTarget()!=null)
         {
-            if(world.getBlockState(this.getBlockPos().down()).getBlock()==Blocks.AIR && this.getTarget().getY()>=this.getY())
+            if(world.getBlockState(this.getBlockPos().down()).getBlock()==Blocks.AIR && this.getTarget().getY()>=this.getY()+2)
             {
                 world.setBlockState(this.getBlockPos().down(), Blocks.OAK_PLANKS.getDefaultState());
                 if(this.getTarget() instanceof  PlayerEntity)

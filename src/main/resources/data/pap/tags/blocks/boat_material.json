@@ -7,7 +7,8 @@
     "#minecraft:wooden_fences",
     "#minecraft:wooden_trapdoors",
     "#minecraft:logs",
-    "#minecraft:wool"
+    "#minecraft:wool",
+    "pap:static_cannon"
 
   ]
 }

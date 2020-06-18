@@ -6,6 +6,7 @@ import gd.rf.acro.pap.dimension.PirateOceanChunkGenerator;
 import gd.rf.acro.pap.entities.PirateEntity;
 import gd.rf.acro.pap.entities.SailingShipEntity;
 import gd.rf.acro.pap.items.AstrolabeItem;
+import gd.rf.acro.pap.items.BlocksLoaderItem;
 import gd.rf.acro.pap.items.MusketItem;
 import gd.rf.acro.pap.items.RecruitmentBookItem;
 import gd.rf.acro.pap.world.PortTownFeature;
@@ -32,10 +33,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -87,7 +85,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 
 	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
 			new Identifier("pap", "pap_tab"),
-			() -> new ItemStack(PiratesAndPlunderers.ASTROLABE_ITEM));
+			() -> new ItemStack(PiratesAndPlunderers.STATIC_CANNON_BLOCK));
 	
 	public static final Tag<Block> BOAT_MATERIAL = TagRegistry.block(new Identifier("pap","boat_material"));
 
@@ -124,8 +122,8 @@ public class PiratesAndPlunderers implements ModInitializer {
 		CommandInit.INSTANCE.registerCommands();
 		logger.info("Hello Fabric world!");
     
-		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
-		FabricDefaultAttributeRegistry.register(PIRATE_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D).add(EntityAttributes.GENERIC_FOLLOW_RANGE,100));
+		FabricDefaultAttributeRegistry.register(SAILING_BOAT_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D));
+		FabricDefaultAttributeRegistry.register(PIRATE_ENTITY_ENTITY_TYPE, MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D).add(EntityAttributes.GENERIC_FOLLOW_RANGE,100).add(EntityAttributes.GENERIC_ATTACK_DAMAGE,2));
 
 
 		Registry.register(Registry.CHUNK_GENERATOR, new Identifier("pap", "pirate_ocean"), PirateOceanChunkGenerator.CODEC);
@@ -188,9 +186,11 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static final RecruitmentBookItem RECRUITMENT_BOOK_ITEM = new RecruitmentBookItem(new Item.Settings().group(TAB));
 	public static final Item SHOT_ITEM = new Item(new Item.Settings().group(TAB));
 	public static final Item CANNON_SHOT_ITEM = new Item(new Item.Settings().group(TAB));
+	public static final BlocksLoaderItem BLOCKS_LOADER_ITEM = new BlocksLoaderItem(new Item.Settings().group(TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("pap","musket"),MUSKET_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("pap","blocks_loader"),BLOCKS_LOADER_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","blunderbuss"),BLUNDERBUSS_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","shot"),SHOT_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","cannon_shot"),CANNON_SHOT_ITEM);
@@ -198,6 +198,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 		Registry.register(Registry.ITEM,new Identifier("pap","recruitment_book"),RECRUITMENT_BOOK_ITEM);
 		Registry.register(Registry.ITEM, new Identifier("pap", "static_cannon"), new BlockItem(STATIC_CANNON_BLOCK, new Item.Settings().group(TAB)));
 		Registry.register(Registry.ITEM, new Identifier("pap", "shipwrights_table"), new BlockItem(SHIPWRIGHTS_TABLE, new Item.Settings().group(TAB)));
+		Registry.register(Registry.ITEM, new Identifier("pap", "pirate_spawn_egg"), new SpawnEggItem(PIRATE_ENTITY_ENTITY_TYPE, 0xFF0000, 0x000000, new Item.Settings().group(TAB)));
 	}
 
 

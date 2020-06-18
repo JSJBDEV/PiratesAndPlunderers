@@ -1,16 +1,11 @@
 package gd.rf.acro.pap.entities;
 
-import com.sun.jna.platform.win32.WinNT;
-import gd.rf.acro.pap.engagement.NoCurrentEngagementException;
 import gd.rf.acro.pap.PiratesAndPlunderers;
+import gd.rf.acro.pap.engagement.NoCurrentEngagementException;
 import gd.rf.acro.pap.lib.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -20,12 +15,13 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.io.FileUtils;
 
@@ -68,7 +64,7 @@ public class SailingShipEntity extends PigEntity {
             CompoundTag tag = this.getEquippedStack(EquipmentSlot.CHEST).getTag();
             return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/"+tag.getString("model")+".blocks"),"utf-8"));
         }
-        return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/ship1.blocks"),"utf-8"));
+        return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/Piratv Arcadia.blocks"),"utf-8"));
     }
 
     @Override
@@ -125,12 +121,17 @@ public class SailingShipEntity extends PigEntity {
     }
 
     @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_BOAT_PADDLE_WATER;
+    }
+
+    @Override
     public float getSaddledSpeed() {
         if(this.world.getBlockState(this.getBlockPos().down()).getBlock()== Blocks.WATER)
         {
             return 1;
         }
-        return 0.1f;
+        return 0.05f;
     }
 
     @Override

@@ -1,0 +1,18 @@
+{
+  "item.pap.musket": "Musket",
+  "item.pap.blunderbuss": "Blunderbuss",
+  "item.pap.shot": "Musket/Blunderbuss Shot",
+  "item.pap.cannon_shot": "Cannon Ball",
+  "item.pap.astrolabe": "Astrolabe",
+  "item.pap.recruitment_book": "Recruitment Book",
+  "item.pap.pirate_spawn_egg": "Spawn Pirate",
+
+  "block.pap.static_cannon": "Cannon",
+  "block.pap.shipwrights_table": "Shipwright's Table",
+
+  "itemGroup.pap.pap_tab": "Pirates And Plunderers",
+  "entity.pap.sail_boat": "Sailing Ship",
+  "entity.pap.pirate": "Pirate",
+  "entity.minecraft.villager.shipwright_prof": "Shipwright"
+
+}

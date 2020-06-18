@@ -35,13 +35,13 @@ public class ShipBuilderBlock extends Block {
             //should be placed 2 blocks below where you want the water level
             List<String> complete = new ArrayList<>();
             int vv = RandomUtils.nextInt(0,9999);
-            for (int i = -16; i < 16; i++) {
-                for (int j = 0; j < 32; j++) {
-                    for (int k = -16; k < 16; k++) {
+            for (int i = -32; i < 32; i++) {
+                for (int j = 0; j < 64; j++) {
+                    for (int k = -32; k < 32; k++) {
                         if(PiratesAndPlunderers.BOAT_MATERIAL.contains(world.getBlockState(pos.add(i,j,k)).getBlock()))
                         {
                             //complete.add(Registry.BLOCK.getId(world.getBlockState(pos.add(i,j,k)).getBlock()).toString()+" "+i+" "+j+" "+k);
-                            complete.add(Block.getRawIdFromState(world.getBlockState(pos.add(i,j,k)))+" "+i+" "+j+" "+k);
+                            complete.add(Block.getRawIdFromState(world.getBlockState(pos.add(i,j,k)))+" "+i+" "+(j-3)+" "+k);
                         }
                     }
                 }
@@ -61,29 +61,29 @@ public class ShipBuilderBlock extends Block {
     @Override
     public void onSteppedOn(World world, BlockPos pos, Entity entity) {
         super.onSteppedOn(world, pos, entity);
-        if(world.getBlockState(pos.add(-16,0,-16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(-16,0,-16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(-32,0,-32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(-32,0,-32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(16,0,-16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(16,0,-16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(32,0,-32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(32,0,-32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(16,32,-16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(16,32,-16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(32,64,-32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(32,64,-32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(16,32,16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(16,32,16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(32,64,32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(32,64,32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(-16,0,16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(-16,0,16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(-32,0,32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(-32,0,32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(-16,32,16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(-16,32,16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(-32,64,32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(-32,64,32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(-16,32,-16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(-16,32,-16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
+        if(world.getBlockState(pos.add(-32,64,-32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(-32,64,-32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());
         }
-        if(world.getBlockState(pos.add(16,0,16)).getBlock()== Blocks.AIR){
-            world.setBlockState(pos.add(16,0,16),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());}
+        if(world.getBlockState(pos.add(32,0,32)).getBlock()== Blocks.AIR){
+            world.setBlockState(pos.add(32,0,32),PiratesAndPlunderers.SHIP_BUILDER_MARKER.getDefaultState());}
 
     }
 }
