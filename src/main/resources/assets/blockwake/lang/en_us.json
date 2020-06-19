@@ -1,0 +1,20 @@
+{
+  "item.blockwake.musket": "Musket",
+  "item.blockwake.blunderbuss": "Blunderbuss",
+  "item.blockwake.shot": "Musket/Blunderbuss Shot",
+  "item.blockwake.cannon_shot": "Cannon Ball",
+  "item.blockwake.astrolabe": "Astrolabe",
+  "item.blockwake.recruitment_book": "Recruitment Book",
+  "item.blockwake.pirate_spawn_egg": "Spawn Pirate",
+  "item.blockwake.blocks_loader": ".blocks file loader",
+  "item.blockwake.commission_item": "Commission Ship",
+
+  "block.blockwake.static_cannon": "Cannon",
+  "block.blockwake.shipwrights_table": "Shipwright's Table",
+
+  "itemGroup.blockwake.blockwake_tab": "Pirates And Plunderers",
+  "entity.blockwake.sail_boat": "Sailing Ship",
+  "entity.blockwake.pirate": "Pirate",
+  "entity.minecraft.villager.shipwright_prof": "Shipwright"
+
+}

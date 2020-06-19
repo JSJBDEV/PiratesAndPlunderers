@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "pap",
+  "id": "blockwake",
   "version": "${version}",
 
   "name": "Pirates And Plunderers",
@@ -19,17 +19,17 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "gd.rf.acro.pap.PiratesAndPlunderers"
+      "gd.rf.acro.blockwake.Blockwake"
     ],
     "client": [{
-      "value": "gd.rf.acro.pap.ClientInit"
+      "value": "gd.rf.acro.blockwake.ClientInit"
     }],
     "server": [{
-      "value": "gd.rf.acro.pap.ServerInit"
+      "value": "gd.rf.acro.blockwake.ServerInit"
     }]
   },
   "mixins": [
-    "pap.mixins.json"
+    "blockwake.mixins.json"
   ],
 
   "depends": {
