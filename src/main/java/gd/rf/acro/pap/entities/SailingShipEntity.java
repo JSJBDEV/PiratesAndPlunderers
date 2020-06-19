@@ -64,7 +64,7 @@ public class SailingShipEntity extends PigEntity {
             CompoundTag tag = this.getEquippedStack(EquipmentSlot.CHEST).getTag();
             return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/"+tag.getString("model")+".blocks"),"utf-8"));
         }
-        return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/Piratv Arcadia.blocks"),"utf-8"));
+        return readModelBlocks(FileUtils.readFileToString(new File("./config/PiratesAndPlunderers/ships/piratv_arcadia.blocks"),"utf-8"));
     }
 
     @Override

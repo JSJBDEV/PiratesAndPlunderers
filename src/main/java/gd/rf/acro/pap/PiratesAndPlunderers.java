@@ -5,10 +5,7 @@ import gd.rf.acro.pap.command.CommandInit;
 import gd.rf.acro.pap.dimension.PirateOceanChunkGenerator;
 import gd.rf.acro.pap.entities.PirateEntity;
 import gd.rf.acro.pap.entities.SailingShipEntity;
-import gd.rf.acro.pap.items.AstrolabeItem;
-import gd.rf.acro.pap.items.BlocksLoaderItem;
-import gd.rf.acro.pap.items.MusketItem;
-import gd.rf.acro.pap.items.RecruitmentBookItem;
+import gd.rf.acro.pap.items.*;
 import gd.rf.acro.pap.world.PortTownFeature;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.fabricmc.api.ModInitializer;
@@ -74,7 +71,7 @@ public class PiratesAndPlunderers implements ModInitializer {
 
 	public static ConfigLoader config;
 	public static Logger logger = LogManager.getLogger();
-	private static final String[] ship_names = {"ship1"};
+	private static final String[] ship_names = {"piratv_arcadia","lord_crawlmasks_clipper"};
 	private static final String[] structure_names = {
 		"port_town_bottom_floor",
 		"port_town_farm",
@@ -187,9 +184,11 @@ public class PiratesAndPlunderers implements ModInitializer {
 	public static final Item SHOT_ITEM = new Item(new Item.Settings().group(TAB));
 	public static final Item CANNON_SHOT_ITEM = new Item(new Item.Settings().group(TAB));
 	public static final BlocksLoaderItem BLOCKS_LOADER_ITEM = new BlocksLoaderItem(new Item.Settings().group(TAB));
+	public static final CommissionItem COMMISSION_ITEM = new CommissionItem(new Item.Settings().group(TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("pap","musket"),MUSKET_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("pap","commission_item"),COMMISSION_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","blocks_loader"),BLOCKS_LOADER_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","blunderbuss"),BLUNDERBUSS_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("pap","shot"),SHOT_ITEM);

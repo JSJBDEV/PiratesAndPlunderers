@@ -13,12 +13,14 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static gd.rf.acro.pap.PiratesAndPlunderers.logger;
 
 public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
-    private List<String> blocks;
+    private HashMap<String,List<String>> entities;
     private String ship;
     @Override
     public void setAngles(SailingShipEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
@@ -27,30 +29,32 @@ public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
             this.ship =entity.getEquippedStack(EquipmentSlot.CHEST).getTag().getString("model");
         }
     }
-    public SailingShipBlockModel(String model)
+    public SailingShipBlockModel()
     {
-        this.ship=model;
-
+        entities=new HashMap<>();
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
 
         //on first launch, the config wont exist by the time this is initiated, to solve this problems instead it loads the file on the first in game render frame
-        if(blocks==null)
-        {
+
+        if(!entities.containsKey(this.ship)){
             try {
-                blocks = FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+this.ship),"utf-8");
+                entities.put(this.ship,FileUtils.readLines(new File("./config/PiratesAndPlunderers/ships/"+this.ship+".blocks"),"utf-8"));
+                System.out.println("loaded "+this.ship+" model into the world");
             } catch (IOException e) {
                 logger.error("Error reading blocks file.", e);
+                entities.put(this.ship,Collections.singletonList("15 0 0 0"));
             }
         }
+
 
         VertexConsumerProvider vertexConsumerProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
         matrices.push();
         matrices.scale(-1.0F, -1.0F, 1.0F);
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-        blocks.forEach(line->
+        entities.get(this.ship).forEach(line->
         {
             String[] compound = line.split(" ");
             //Block block = Registry.BLOCK.get(new Identifier(compound[0]));

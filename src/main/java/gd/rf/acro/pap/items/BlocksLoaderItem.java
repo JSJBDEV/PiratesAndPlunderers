@@ -2,9 +2,12 @@ package gd.rf.acro.pap.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -52,5 +55,14 @@ public class BlocksLoaderItem extends Item {
             e.printStackTrace();
             System.out.println("no .blocks file found: "+folder+"/"+name);
         }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(new LiteralText("rename this item to the name of "));
+        tooltip.add(new LiteralText("a .blocks file (without the .blocks)"));
+        tooltip.add(new LiteralText("use the item to load from /ships "));
+        tooltip.add(new LiteralText("and shift-use the item for /buildings"));
     }
 }

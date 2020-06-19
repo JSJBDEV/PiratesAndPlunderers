@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 
 public class SailingShipMobEntityRenderer extends MobEntityRenderer<SailingShipEntity,SailingShipBlockModel> {
     public SailingShipMobEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new SailingShipBlockModel("Piratv Arcadia.blocks"), 1);
+        super(entityRenderDispatcher, new SailingShipBlockModel(), 1);
     }
 
     @Override

@@ -6,6 +6,8 @@
   "item.pap.astrolabe": "Astrolabe",
   "item.pap.recruitment_book": "Recruitment Book",
   "item.pap.pirate_spawn_egg": "Spawn Pirate",
+  "item.pap.blocks_loader": ".blocks file loader",
+  "item.pap.commission_item": "Commission Ship",
 
   "block.pap.static_cannon": "Cannon",
   "block.pap.shipwrights_table": "Shipwright's Table",
