@@ -6,6 +6,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import gd.rf.acro.blockwake.Blockwake.logger;
+import java.awt.Dimension
 
 /**
  * This class contains config values for the mod.
@@ -16,11 +17,14 @@ class ConfigLoader {
      * Add the public variable here, eg: `var MyConfigVariable: String;`
      */
 
-    var DimensionHasFancySky: Boolean;
-    var DimensionEngagementSpacingBlocks: Int;
-    var DimensionEngagmentLimit: Int;
-    var RecruitmentSearchRange: Int;
-    var VillagerRecruitmentChance: Int;
+    val DimensionHasFancySky: Boolean;
+    val DimensionEngagementSpacingBlocks: Int;
+    val DimensionEngagmentLimit: Int;
+    val DimensionMinSpacing: Int;
+    val DimensionMaxSpacing: Int;
+
+    val RecruitmentSearchRange: Int;
+    val VillagerRecruitmentChance: Int;
 
     init {
         val configFile = File(configPath);
@@ -32,12 +36,13 @@ class ConfigLoader {
          * Set the variable here
          */
         DimensionHasFancySky = conf.getBoolean("dimension.fancySky")
-        RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
-        VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");
-        RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
-        VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");
-        DimensionEngagementSpacingBlocks = conf.getInt("dimension.engagements.spacing")
+        DimensionEngagementSpacingBlocks = conf.getInt("dimension.engagements.spacing.width")
         DimensionEngagmentLimit = conf.getInt("dimension.engagements.limit")
+        DimensionMinSpacing = conf.getInt("dimension.engagements.spacing.min")
+        DimensionMaxSpacing = conf.getInt("dimension.engagements.spacing.max")
+
+        RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
+        VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");
 
         logger.info("Loaded Configuration")
 

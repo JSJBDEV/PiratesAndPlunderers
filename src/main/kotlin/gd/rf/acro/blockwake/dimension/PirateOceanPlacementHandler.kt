@@ -13,7 +13,7 @@ import net.minecraft.world.Heightmap
 import net.minecraft.world.World
 
 @SuppressWarnings("deprecation")
-object VoidPlacementHandler {
+object PirateOceanPlacementHandler {
     fun enter(portalPos: BlockPos): EntityPlacer {
         return EntityPlacer { entity: Entity, destination: ServerWorld, direction: Direction?, v: Double, v1: Double ->
             val pos = enterOcean(entity, destination, portalPos)

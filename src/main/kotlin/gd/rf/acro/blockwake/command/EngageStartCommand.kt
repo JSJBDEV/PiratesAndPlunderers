@@ -3,6 +3,7 @@ package gd.rf.acro.blockwake.command
 import com.google.common.collect.ImmutableList
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
+import gd.rf.acro.blockwake.Blockwake
 import gd.rf.acro.blockwake.engagement.EngagementManager
 import gd.rf.acro.blockwake.engagement.ShipHasNoEntitiesException
 import gd.rf.acro.blockwake.engagement.ShipIsAlreadyEngagedException

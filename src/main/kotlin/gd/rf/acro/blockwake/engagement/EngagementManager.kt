@@ -4,7 +4,8 @@ import gd.rf.acro.blockwake.Blockwake
 import gd.rf.acro.blockwake.Blockwake.logger
 import gd.rf.acro.blockwake.Blockwake.config
 import gd.rf.acro.blockwake.dimension.PirateOceanChunkGenerator
-import gd.rf.acro.blockwake.dimension.VoidPlacementHandler.enter
+import gd.rf.acro.blockwake.dimension.PirateOceanPlacementHandler
+import gd.rf.acro.blockwake.entities.PirateEntity
 import gd.rf.acro.blockwake.entities.SailingShipEntity
 import gd.rf.acro.blockwake.lib.VectorHelper
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
@@ -13,7 +14,9 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
+import java.util.*
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -67,7 +70,7 @@ object EngagementManager {
             logger.error("Failed to find PIRATE_OCEAN_WORLD, was it registered?")
             return false
         }
-        FabricDimensions.teleport(entity, oceanWorld, enter(pos ?: BlockPos(0, 64, 0)))
+        FabricDimensions.teleport(entity, oceanWorld, PirateOceanPlacementHandler.enter(pos ?: BlockPos(0, 64, 0)))
         return true
     }
 
@@ -82,11 +85,26 @@ object EngagementManager {
         val attackerEntities = attacker.passengerList
         val defenderEntities = defender.passengerList
 
-        val midPosition = VectorHelper.getMidpoint(attacker.blockPos, defender.blockPos)
-        val attackerOffset = VectorHelper.subtract(midPosition, attacker.blockPos)
-        val defenderOffset = VectorHelper.subtract(midPosition, defender.blockPos)
+        val initialAttackerEntityPos = BlockPos(attacker.blockPos.x, 64, attacker.blockPos.z)
+        val initialDefenderEntityPos = BlockPos(defender.blockPos.x, 64, defender.blockPos.z)
 
-        val serverWorld: ServerWorld;
+        val midPosition = VectorHelper.getMidpoint(initialAttackerEntityPos, initialDefenderEntityPos)
+        var attackerOffset = VectorHelper.subtract(midPosition, attacker.blockPos)
+        var defenderOffset = VectorHelper.subtract(midPosition, defender.blockPos)
+
+        val offsetNewMagnitude: Int
+
+        if (VectorHelper.findMagnitude(attackerOffset) > config.DimensionMaxSpacing)
+            offsetNewMagnitude = config.DimensionMaxSpacing
+        else if (VectorHelper.findMagnitude(attackerOffset) < config.DimensionMinSpacing)
+            offsetNewMagnitude = config.DimensionMinSpacing
+        else
+            offsetNewMagnitude = VectorHelper.findMagnitude(attackerOffset).toInt()
+
+        attackerOffset = VectorHelper.multiplyVector(VectorHelper.getUnitVector(attackerOffset), offsetNewMagnitude.toDouble());
+        defenderOffset = VectorHelper.multiplyVector(VectorHelper.getUnitVector(defenderOffset), offsetNewMagnitude.toDouble());
+
+        val serverWorld: ServerWorld
 
         try {
             serverWorld = attackerEntities[0].entityWorld as ServerWorld
@@ -113,11 +131,12 @@ object EngagementManager {
 
         //TODO: Use entity placers
 
-        for (e in attackerEntities)
-            FabricDimensions.teleport(e, oceanWorld);
-
-        for (e in defenderEntities)
-            FabricDimensions.teleport(e, oceanWorld);
+        for ((entities, pos) in arrayOf(Pair(attackerEntities, initialAttackerPosition), Pair(defenderEntities, initialDefenderPosition))) {
+            for (e in entities) {
+                if (e is PlayerEntity || e is PirateEntity)
+                    FabricDimensions.teleport(e, oceanWorld, PirateOceanPlacementHandler.enter(pos.add(0, 3, 0)));
+            }
+        }
     }
 
     private fun rotateBlockModel90Clockwise(blocks: Array<gd.rf.acro.blockwake.lib.Pair<BlockState, BlockPos>>): Array<gd.rf.acro.blockwake.lib.Pair<BlockState, BlockPos>> {
@@ -126,7 +145,9 @@ object EngagementManager {
             val pos = blocks[index].second
             val z = -1*pos.x
             val x = pos.z
-            newBlocks[index] = gd.rf.acro.blockwake.lib.Pair(blocks[index].first, BlockPos(x, pos.y, z))
+            val state = blocks[index].first
+            state.rotate(BlockRotation.CLOCKWISE_90)
+            newBlocks[index] = gd.rf.acro.blockwake.lib.Pair(state, BlockPos(x, pos.y, z))
         }
         return newBlocks as Array<gd.rf.acro.blockwake.lib.Pair<BlockState, BlockPos>>
     }
