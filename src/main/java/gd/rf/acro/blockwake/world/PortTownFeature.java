@@ -5,6 +5,7 @@ import gd.rf.acro.blockwake.Blockwake;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BarrelBlockEntity;
+import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -108,7 +109,12 @@ public class PortTownFeature extends Feature<DefaultFeatureConfig> {
                     {
                         BarrelBlockEntity entity = (BarrelBlockEntity) world.getBlockEntity(loc);
                         Identifier[] vc =  LootTables.getAll().toArray(new Identifier[]{});
-                        entity.setLootTable(vc[RandomUtils.nextInt(0,vc.length)],RandomUtils.nextLong());
+                        Identifier table = vc[RandomUtils.nextInt(0,vc.length)];
+                        while(table.getPath().equals("empty"))
+                        {
+                            table = vc[RandomUtils.nextInt(0,vc.length)];
+                        }
+                        entity.setLootTable(table,RandomUtils.nextLong());
                     }
                 }
                 else

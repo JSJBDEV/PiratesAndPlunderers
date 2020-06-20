@@ -63,7 +63,9 @@ public class Blockwake implements ModInitializer {
 		"port_town_farm",
 		"port_town_tannery",
 		"port_town_archery",
-		"port_town_library"
+		"port_town_library",
+		"port_town_storage",
+		"port_town_shipwright"
 	};
 
 	public static final ItemGroup TAB = FabricItemGroupBuilder.build(
