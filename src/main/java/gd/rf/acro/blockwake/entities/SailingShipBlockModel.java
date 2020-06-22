@@ -31,6 +31,7 @@ public class SailingShipBlockModel extends EntityModel<SailingShipEntity> {
     }
     public SailingShipBlockModel()
     {
+        this.ship="piratv_arcadia";
         entities=new HashMap<>();
     }
 

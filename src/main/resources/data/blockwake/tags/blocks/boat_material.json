@@ -8,7 +8,8 @@
     "#minecraft:wooden_trapdoors",
     "#minecraft:logs",
     "#minecraft:wool",
-    "blockwake:static_cannon"
+    "blockwake:static_cannon",
+    "blockwake:ship_wheel_block"
 
   ]
 }
