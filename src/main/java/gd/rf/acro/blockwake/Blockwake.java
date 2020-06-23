@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -102,6 +103,7 @@ public class Blockwake implements ModInitializer {
 		// Proceed with mild caution.
 		registerBlocks();
 		registerItems();
+		registerBlockEntities();
 		SHIPWRIGHT_POI = PointOfInterestHelper.register(new Identifier("blockwake","shipwright_poi"),1,50, Blockwake.SHIPWRIGHTS_TABLE);
 		SHIPWRIGHT = VillagerProfessionBuilder.create().id(new Identifier("blockwake","shipwright")).workstation(SHIPWRIGHT_POI).build();
 		CommandInit.INSTANCE.registerCommands();
@@ -155,6 +157,7 @@ public class Blockwake implements ModInitializer {
 	public static final StaticMobSpawner STATIC_MOB_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build(),EntityType.VILLAGER);
     public static final StaticMobSpawner STATIC_PIRATE_SPAWNER = new StaticMobSpawner(FabricBlockSettings.of(Material.METAL).build(),PIRATE_ENTITY_ENTITY_TYPE);
 	public static final Block SHIPWRIGHTS_TABLE = new Block(FabricBlockSettings.of(Material.WOOD).build());
+	public static final ShipWheelBlock SHIP_WHEEL_BLOCK = new ShipWheelBlock(FabricBlockSettings.of(Material.WOOD).build());
 	private void registerBlocks()
 	{
 		Registry.register(Registry.BLOCK,new Identifier("blockwake","ship_builder"),SHIP_BUILDER_BLOCK);
@@ -164,6 +167,7 @@ public class Blockwake implements ModInitializer {
 		Registry.register(Registry.BLOCK,new Identifier("blockwake","static_mob_spawner"),STATIC_MOB_SPAWNER);
         Registry.register(Registry.BLOCK,new Identifier("blockwake","static_pirate_spawner"),STATIC_PIRATE_SPAWNER);
 		Registry.register(Registry.BLOCK,new Identifier("blockwake","shipwrights_table"),SHIPWRIGHTS_TABLE);
+		Registry.register(Registry.BLOCK,new Identifier("blockwake","ship_wheel_block"),SHIP_WHEEL_BLOCK);
 	}
 	public static final MusketItem MUSKET_ITEM = new MusketItem(new Item.Settings().group(TAB),3,8);
 	public static final MusketItem BLUNDERBUSS_ITEM = new MusketItem(new Item.Settings().group(TAB),1,6);
@@ -186,6 +190,11 @@ public class Blockwake implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("blockwake", "static_cannon"), new BlockItem(STATIC_CANNON_BLOCK, new Item.Settings().group(TAB)));
 		Registry.register(Registry.ITEM, new Identifier("blockwake", "shipwrights_table"), new BlockItem(SHIPWRIGHTS_TABLE, new Item.Settings().group(TAB)));
 		Registry.register(Registry.ITEM, new Identifier("blockwake", "pirate_spawn_egg"), new SpawnEggItem(PIRATE_ENTITY_ENTITY_TYPE, 0xFF0000, 0x000000, new Item.Settings().group(TAB)));
+	}
+	public static BlockEntityType<ShipWheelBlockEntity> SHIPWHEEL_BLOCK_ENTITY;
+	private void registerBlockEntities()
+	{
+		SHIPWHEEL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,"blockwake:shipwheel_entity",BlockEntityType.Builder.create(ShipWheelBlockEntity::new,SHIP_WHEEL_BLOCK).build(null));
 	}
 
 
