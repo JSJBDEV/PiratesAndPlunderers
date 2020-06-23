@@ -106,7 +106,7 @@ class PirateOceanChunkGenerator(biomeSource: BiomeSource?) : ChunkGenerator(biom
                 blk[i] = Blocks.BEDROCK.defaultState!!
             }
             for (i in 4..16) {
-                blk[i] = Blocks.SAND.defaultState!!
+                blk[i] = Blocks.SANDSTONE.defaultState!!
             }
             for (i in 17..64) {
                 blk[i] = Blocks.WATER.defaultState!!

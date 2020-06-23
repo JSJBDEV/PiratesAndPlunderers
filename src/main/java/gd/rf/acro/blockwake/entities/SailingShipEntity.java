@@ -15,6 +15,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.FluidTags;
@@ -95,11 +96,14 @@ public class SailingShipEntity extends PigEntity {
         engagedWithEntity = null;
     }
 
-    @Override
-    public List<Entity> getPassengerList() {
-        // Does this even work?
-        // Pirate entities can be 'Created' here
-        return super.getPassengerList();
+    public List<Entity> getPassengerList(ServerWorld world) {
+        List<Entity> passengers = new ArrayList<>(super.getPassengerList());
+        if (passengers.size() == 0) {
+            for(int i=0;i<4;i++) {
+                passengers.add(new PirateEntity(Blockwake.PIRATE_ENTITY_ENTITY_TYPE, world));
+            }
+        }
+        return passengers;
     }
 
     @Override

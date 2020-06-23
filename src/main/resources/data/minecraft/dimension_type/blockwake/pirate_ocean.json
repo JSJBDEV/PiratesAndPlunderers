@@ -10,5 +10,9 @@
   "has_raids" : false,
   "respawn_anchor_works": false,
   "bed_works" : false,
-  "piglin_safe" : false
+  "piglin_safe" : false,
+
+  "sea_level": 64,
+  "disable_mob_generation": true,
+  "structures": []
 }

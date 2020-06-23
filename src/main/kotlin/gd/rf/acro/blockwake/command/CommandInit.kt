@@ -10,6 +10,7 @@ object CommandInit {
         CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher: CommandDispatcher<ServerCommandSource?>?, dedicated: Boolean ->
             EngageStartCommand.register(dispatcher!!)
             EngageWorldManageCommand.register(dispatcher)
+            PrintEntitiesCommand.register(dispatcher)
         })
     }
 }

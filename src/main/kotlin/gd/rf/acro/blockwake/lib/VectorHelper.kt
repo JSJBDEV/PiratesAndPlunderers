@@ -52,5 +52,4 @@ object VectorHelper {
                 a.z*m
         )
     }
-
 }

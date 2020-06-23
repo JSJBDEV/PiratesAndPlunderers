@@ -10,12 +10,14 @@ import gd.rf.acro.blockwake.entities.SailingShipEntity
 import gd.rf.acro.blockwake.lib.VectorHelper
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import java.util.*
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -25,7 +27,8 @@ typealias EngagementLocation = Pair<Int, Int>
 
 object EngagementManager {
 
-    private val CurrentEngagements: List<EngagementLocation> = emptyList()
+    private val CurrentEngagements = emptyList<EngagementLocation>()
+    private val EntityToShipEntityMap = mutableMapOf<Entity, SailingShipEntity>()
 
     private fun getEngagementLocationBlockRange(loc: EngagementLocation): Pair<BlockPos, BlockPos> {
         val bp1 = BlockPos(loc.first* config.DimensionEngagementSpacingBlocks, 256, loc.second* config.DimensionEngagementSpacingBlocks)
@@ -59,6 +62,16 @@ object EngagementManager {
         }
     }
 
+    fun teleportEntityBackToOverworld(entity: Entity): Boolean {
+        val ship = EntityToShipEntityMap[entity]
+        if (ship != null) {
+            val targetWorld = ship.entityWorld as ServerWorld
+            FabricDimensions.teleport(entity, targetWorld, PirateOceanPlacementHandler.enter(ship.blockPos))
+            return true
+        }
+        return false
+    }
+
 
     fun teleportEntityToPirateOcean(entity: Entity, pos: BlockPos? = null): Boolean {
         val serverWorld = entity.entityWorld as ServerWorld
@@ -70,7 +83,9 @@ object EngagementManager {
             logger.error("Failed to find PIRATE_OCEAN_WORLD, was it registered?")
             return false
         }
-        FabricDimensions.teleport(entity, oceanWorld, PirateOceanPlacementHandler.enter(pos ?: BlockPos(0, 64, 0)))
+
+        logger.info("Teleporting $entity to the pirate ocean at $pos")
+        FabricDimensions.teleport(entity, oceanWorld, PirateOceanPlacementHandler.enter(pos ?: BlockPos(0, 100, 0)))
         return true
     }
 
@@ -116,10 +131,15 @@ object EngagementManager {
         val attackerBlocks = rotateBlockModel90Clockwise(attacker.modelBlocksForEntity.toTypedArray())
         val defenderBlocks = rotateBlockModel90Clockwise(rotateBlockModel180(defender.modelBlocksForEntity.toTypedArray()))
 
-        val engagementPositionBase = BlockPos(0, 64, 0)
+        val engagementLocationInGrid = setupNewEngagementLocation()
 
-        val initialAttackerPosition = engagementPositionBase.add(attackerOffset)
-        val initialDefenderPosition = engagementPositionBase.add(defenderOffset)
+        val engagementPositionBase = BlockPos(engagementLocationInGrid.first*config.DimensionEngagementSpacingBlocks, 64, engagementLocationInGrid.second* config.DimensionEngagementSpacingBlocks)
+
+        var initialAttackerPosition = engagementPositionBase.add(attackerOffset)
+        var initialDefenderPosition = engagementPositionBase.add(defenderOffset)
+
+        initialAttackerPosition = BlockPos(initialAttackerPosition.x, 64, initialAttackerPosition.z)
+        initialDefenderPosition = BlockPos(initialDefenderPosition.x, 64, initialDefenderPosition.z)
 
         for (blk in attackerBlocks) {
             oceanWorld.setBlockState(initialAttackerPosition.add(blk.second), blk.first, 3)
@@ -129,14 +149,25 @@ object EngagementManager {
             oceanWorld.setBlockState(initialDefenderPosition.add(blk.second), blk.first, 3)
         }
 
-        //TODO: Use entity placers
-
-        for ((entities, pos) in arrayOf(Pair(attackerEntities, initialAttackerPosition), Pair(defenderEntities, initialDefenderPosition))) {
+        for ((entities, pos, ship) in arrayOf(Triple(attackerEntities, initialAttackerPosition, attacker), Triple(defenderEntities, initialDefenderPosition, defender))) {
             for (e in entities) {
-                if (e is PlayerEntity || e is PirateEntity)
-                    FabricDimensions.teleport(e, oceanWorld, PirateOceanPlacementHandler.enter(pos.add(0, 3, 0)));
+                if (e is PlayerEntity || e is PirateEntity) {
+                    EntityToShipEntityMap[e] = ship
+                    teleportEntityToPirateOcean(e, getClearSpawnSpace(oceanWorld, pos))
+                }
             }
         }
+    }
+
+    private fun getClearSpawnSpace(world: ServerWorld, _about: BlockPos): BlockPos {
+        var about = _about
+        for (i in 0..254) {
+            val nextBlockPos = about.add(0, 1, 0);
+            if (world.getBlockState(about) == Blocks.AIR.defaultState && world.getBlockState(nextBlockPos) == Blocks.AIR.defaultState)
+                return about
+            about = nextBlockPos
+        }
+        return _about
     }
 
     private fun rotateBlockModel90Clockwise(blocks: Array<gd.rf.acro.blockwake.lib.Pair<BlockState, BlockPos>>): Array<gd.rf.acro.blockwake.lib.Pair<BlockState, BlockPos>> {
