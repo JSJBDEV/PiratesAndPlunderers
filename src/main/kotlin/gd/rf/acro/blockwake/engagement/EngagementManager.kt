@@ -27,9 +27,9 @@ typealias EngagementLocation = Pair<Int, Int>
 
 object EngagementManager {
 
-    private val CurrentEngagements = mutableListOf<EngagementLocation>()
-    private val EntityToShipEntityMap = mutableMapOf<Entity, SailingShipEntity>()
-    private val ShipToShipEngagementsMap = mutableMapOf<SailingShipEntity, SailingShipEntity>()
+    val CurrentEngagements = mutableListOf<EngagementLocation>()
+    val EntityToShipEntityMap = mutableMapOf<Entity, SailingShipEntity>()
+    val ShipToShipEngagementsMap = mutableMapOf<SailingShipEntity, SailingShipEntity>()
 
     private fun getEngagementLocationBlockRange(loc: EngagementLocation): Pair<BlockPos, BlockPos> {
         val bp1 = BlockPos(loc.first* config.DimensionEngagementSpacingBlocks, 256, loc.second* config.DimensionEngagementSpacingBlocks)
@@ -54,7 +54,7 @@ object EngagementManager {
         return Pair(0, 0)
     }
 
-    fun resetEngagementLocation(world: ServerWorld, loc: EngagementLocation) {
+    fun resetEngagementLocation(world: ServerWorld, loc: EngagementLocation, remove: Boolean = true) {
         val area = getEngagementLocationBlockRange(loc)
         val column = PirateOceanChunkGenerator.getFilledBlockStates();
 
@@ -65,6 +65,9 @@ object EngagementManager {
                 }
             }
         }
+
+        if (remove)
+            CurrentEngagements.remove(loc)
     }
 
     fun teleportEntityBackToOverworld(entity: Entity): Boolean {
@@ -97,17 +100,36 @@ object EngagementManager {
     /**
      * e: The entity that finished the engagement. The other entities will automatically be detected and removed.
      */
-    fun finishEngagement(e: Entity) {
-        val ship1 = EntityToShipEntityMap[e]
+    fun finishEngagement(e1: Entity) {
+        val ship1 = EntityToShipEntityMap[e1]
         val ship2 = ShipToShipEngagementsMap[ship1] ?: ShipToShipEngagementsMap.filterValues { it == ship1 }.keys.elementAt(0)
+
+        val oceanWorld = e1.entityWorld as ServerWorld
+        if (oceanWorld != oceanWorld.server.getWorld(Blockwake.PIRATE_OCEAN_WORLD))
+            throw EntityIsInWrongDimensionException()
 
         for (ship in arrayOf(ship1, ship2)) {
             for (e in EntityToShipEntityMap.filterValues { it == ship }.keys) {
                 val world = e.entityWorld as ServerWorld
                 if (world == world.server.getWorld(Blockwake.PIRATE_OCEAN_WORLD)) {
                     teleportEntityBackToOverworld(e)
+                    EntityToShipEntityMap.remove(e)
+                    e.startRiding(ship)
                 }
             }
+        }
+
+        ShipToShipEngagementsMap.remove(ship1)
+        ShipToShipEngagementsMap.remove(ship2)
+
+        // If no players are left, clear up all the engagement spaces
+        for (e in oceanWorld.iterateEntities()) {
+            if (e is PlayerEntity)
+                return
+        }
+
+        for(loc in CurrentEngagements) {
+            resetEngagementLocation(oceanWorld, loc)
         }
     }
 

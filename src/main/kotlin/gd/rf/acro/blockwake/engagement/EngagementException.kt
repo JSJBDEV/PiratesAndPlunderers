@@ -9,3 +9,5 @@ class ShipIsAlreadyEngagedException : EngagementException("Cannot engage a ship 
 class NoCurrentEngagementException : EngagementException("Cannot disengage from battle when no ship is currently engaged with!")
 
 class ShipHasNoEntitiesException : EngagementException("A ship with no entities cannot engage with another ship")
+
+class EntityIsInWrongDimensionException : EngagementException("This method requires the player is in the Pirate Ocean dimension")
