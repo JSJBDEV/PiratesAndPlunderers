@@ -10,6 +10,7 @@ import gd.rf.acro.blockwake.world.PortTownFeature;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
@@ -20,15 +21,20 @@ import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.Registry;
@@ -47,6 +53,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +82,7 @@ public class Blockwake implements ModInitializer {
 	
 	public static final Tag<Block> BOAT_MATERIAL = TagRegistry.block(new Identifier("blockwake","boat_material"));
 
+
 	public static final RegistryKey<World> PIRATE_OCEAN_WORLD = RegistryKey.of(Registry.DIMENSION, new Identifier("blockwake", "pirate_ocean"));
 
 	public static final EntityType<SailingShipEntity> SAILING_BOAT_ENTITY_ENTITY_TYPE =
@@ -94,6 +102,8 @@ public class Blockwake implements ModInitializer {
 	);
 	public static PointOfInterestType SHIPWRIGHT_POI;
 	public static VillagerProfession SHIPWRIGHT;
+
+
 
 	@Override
 	public void onInitialize() {
@@ -146,6 +156,7 @@ public class Blockwake implements ModInitializer {
 			}
 		});
 
+
 	}
 
 
@@ -177,6 +188,7 @@ public class Blockwake implements ModInitializer {
 	public static final Item CANNON_SHOT_ITEM = new Item(new Item.Settings().group(TAB));
 	public static final BlocksLoaderItem BLOCKS_LOADER_ITEM = new BlocksLoaderItem(new Item.Settings().group(TAB));
 	public static final CommissionItem COMMISSION_ITEM = new CommissionItem(new Item.Settings().group(TAB));
+	public static final ShipGrapplerItem SHIP_GRAPPLER_ITEM = new ShipGrapplerItem(new Item.Settings().group(TAB));
 	private void registerItems()
 	{
 		Registry.register(Registry.ITEM,new Identifier("blockwake","musket"),MUSKET_ITEM);
@@ -184,6 +196,7 @@ public class Blockwake implements ModInitializer {
 		Registry.register(Registry.ITEM,new Identifier("blockwake","blocks_loader"),BLOCKS_LOADER_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("blockwake","blunderbuss"),BLUNDERBUSS_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("blockwake","shot"),SHOT_ITEM);
+		Registry.register(Registry.ITEM,new Identifier("blockwake","ship_grappler"),SHIP_GRAPPLER_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("blockwake","cannon_shot"),CANNON_SHOT_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("blockwake","astrolabe"),ASTROLABE_ITEM);
 		Registry.register(Registry.ITEM,new Identifier("blockwake","recruitment_book"),RECRUITMENT_BOOK_ITEM);
