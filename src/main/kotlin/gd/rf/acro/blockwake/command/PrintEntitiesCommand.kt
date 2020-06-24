@@ -8,6 +8,7 @@ import net.minecraft.command.arguments.EntityArgumentType
 import net.minecraft.entity.Entity
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import java.io.File
 
@@ -26,10 +27,16 @@ object PrintEntitiesCommand {
 
     private fun execute(source: ServerCommandSource): Int {
         val f = File("blockwake_debug_entitylist.txt")
-        f.appendText("\nCommand Executed by ${source.name} in ${source.world}\n[x, y, z] EntityName EntityAge")
+        f.appendText("\nCommand Executed by ${source.name} in ${source.world}\n[x, y, z] EntityName EntityAge\n")
+        var byteCount = 0;
+        var lineCount = 3;
         for(e in source.world.iterateEntities()) {
-            f.appendText("[${e.x.toInt()}, ${e.y.toInt()}, ${e.z.toInt()}] ${e.type} ${e.age}\n")
+            lineCount += 1
+            val text = "[${e.x.toInt()}, ${e.y.toInt()}, ${e.z.toInt()}] ${e.type} ${e.age}\n"
+            byteCount += text.length //UTF-8 Is used, 1 char = 1 byte
+            f.appendText(text)
         }
+        source.sendFeedback(LiteralText("Written $lineCount lines ($byteCount bytes) to ./${f.name}"), true);
         return 0;
     }
 }

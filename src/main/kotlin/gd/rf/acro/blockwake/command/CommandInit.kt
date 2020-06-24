@@ -11,6 +11,9 @@ object CommandInit {
             EngageStartCommand.register(dispatcher!!)
             EngageWorldManageCommand.register(dispatcher)
             PrintEntitiesCommand.register(dispatcher)
+
+            EngagementDisengageCommand.register(dispatcher)
+            EngagementDisengageForceCommand.register(dispatcher)
         })
     }
 }

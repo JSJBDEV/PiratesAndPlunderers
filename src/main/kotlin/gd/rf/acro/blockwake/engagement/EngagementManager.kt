@@ -27,8 +27,9 @@ typealias EngagementLocation = Pair<Int, Int>
 
 object EngagementManager {
 
-    private val CurrentEngagements = emptyList<EngagementLocation>()
+    private val CurrentEngagements = mutableListOf<EngagementLocation>()
     private val EntityToShipEntityMap = mutableMapOf<Entity, SailingShipEntity>()
+    private val ShipToShipEngagementsMap = mutableMapOf<SailingShipEntity, SailingShipEntity>()
 
     private fun getEngagementLocationBlockRange(loc: EngagementLocation): Pair<BlockPos, BlockPos> {
         val bp1 = BlockPos(loc.first* config.DimensionEngagementSpacingBlocks, 256, loc.second* config.DimensionEngagementSpacingBlocks)
@@ -43,7 +44,11 @@ object EngagementManager {
 
         for (i in 0..width) {
             for (j in 0..height) {
-
+                val l = Pair(i, j)
+                if (!CurrentEngagements.contains(l)) {
+                    CurrentEngagements.add(l)
+                    return l
+                }
             }
         }
         return Pair(0, 0)
@@ -87,6 +92,23 @@ object EngagementManager {
         logger.info("Teleporting $entity to the pirate ocean at $pos")
         FabricDimensions.teleport(entity, oceanWorld, PirateOceanPlacementHandler.enter(pos ?: BlockPos(0, 100, 0)))
         return true
+    }
+
+    /**
+     * e: The entity that finished the engagement. The other entities will automatically be detected and removed.
+     */
+    fun finishEngagement(e: Entity) {
+        val ship1 = EntityToShipEntityMap[e]
+        val ship2 = ShipToShipEngagementsMap[ship1] ?: ShipToShipEngagementsMap.filterValues { it == ship1 }.keys.elementAt(0)
+
+        for (ship in arrayOf(ship1, ship2)) {
+            for (e in EntityToShipEntityMap.filterValues { it == ship }.keys) {
+                val world = e.entityWorld as ServerWorld
+                if (world == world.server.getWorld(Blockwake.PIRATE_OCEAN_WORLD)) {
+                    teleportEntityBackToOverworld(e)
+                }
+            }
+        }
     }
 
     fun startEngagementWithShipEntities(attacker: SailingShipEntity, defender: SailingShipEntity) {
@@ -148,6 +170,8 @@ object EngagementManager {
         for (blk in defenderBlocks) {
             oceanWorld.setBlockState(initialDefenderPosition.add(blk.second), blk.first, 3)
         }
+
+        ShipToShipEngagementsMap[attacker] = defender
 
         for ((entities, pos, ship) in arrayOf(Triple(attackerEntities, initialAttackerPosition, attacker), Triple(defenderEntities, initialDefenderPosition, defender))) {
             for (e in entities) {
