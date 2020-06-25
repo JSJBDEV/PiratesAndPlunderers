@@ -1,4 +1,4 @@
-# Pirates And Plunderers
+# Blockwake
 
 A pirate themed adventure, exploration and fantasy mod for 1.16
 
