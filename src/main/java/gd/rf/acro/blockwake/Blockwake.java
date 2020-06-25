@@ -42,7 +42,9 @@ import gd.rf.acro.blockwake.config.ConfigLoader;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
@@ -155,6 +157,8 @@ public class Blockwake implements ModInitializer {
 				return new Identifier("blockwake","data");
 			}
 		});
+
+		Biomes.OCEAN.getEntitySpawnList(SpawnGroup.WATER_CREATURE).add(new Biome.SpawnEntry(SAILING_BOAT_ENTITY_ENTITY_TYPE, 10, 1, 1));
 
 
 	}

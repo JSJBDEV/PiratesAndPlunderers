@@ -1,5 +1,6 @@
 package gd.rf.acro.blockwake.entities;
 
+import com.sun.imageio.spi.RAFImageInputStreamSpi;
 import gd.rf.acro.blockwake.Blockwake;
 import gd.rf.acro.blockwake.engagement.NoCurrentEngagementException;
 import gd.rf.acro.blockwake.lib.Pair;
@@ -15,6 +16,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -25,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +38,6 @@ public class SailingShipEntity extends PigEntity {
     public SailingShipEntity(EntityType<? extends PigEntity> entityType, World world) {
         super(entityType, world);
     }
-
     protected SailingShipEntity engagedWithEntity;
 
     @Override
@@ -115,6 +117,24 @@ public class SailingShipEntity extends PigEntity {
     protected void initGoals() {
 
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getEquippedStack(EquipmentSlot.CHEST).getItem()!=Items.OAK_PLANKS)
+        {
+            Team vv = this.getEntityWorld().getScoreboard().addTeam("PIR_"+ RandomUtils.nextInt(0,99999));
+            this.setModel("lord_crawlmasks_clipper");
+            for (int i = 0; i < RandomUtils.nextInt(0,5); i++) {
+                PirateEntity entity = new PirateEntity(Blockwake.PIRATE_ENTITY_ENTITY_TYPE,this.getEntityWorld());
+                entity.teleport(this.getX(),this.getY(),this.getZ());
+                this.getEntityWorld().getScoreboard().addPlayerToTeam(entity.getEntityName(),vv);
+                this.getEntityWorld().spawnEntity(entity);
+                entity.startRiding(this,true);
+            }
+        }
+    }
+
     public void setModel(String name)
     {
         ItemStack itemStack = new ItemStack(Items.OAK_PLANKS);
@@ -133,7 +153,7 @@ public class SailingShipEntity extends PigEntity {
     public float getSaddledSpeed() {
         if(this.world.getBlockState(this.getBlockPos().down()).getBlock()== Blocks.WATER)
         {
-            return 1;
+            return 0.2f;
         }
         return 0.05f;
     }

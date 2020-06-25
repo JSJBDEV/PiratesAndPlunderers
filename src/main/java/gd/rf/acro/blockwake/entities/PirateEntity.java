@@ -159,9 +159,9 @@ public class PirateEntity extends SkeletonEntity {
     public void tickMovement() {
         super.tickMovement();
 
-        if(this.getTarget()!=null)
+        if(this.getTarget()!=null && this.getVehicle()==null)
         {
-            if(world.getBlockState(this.getBlockPos().down()).getBlock()==Blocks.AIR && this.getTarget().getY()>=this.getY()+2)
+            if(world.getBlockState(this.getBlockPos().down()).getBlock()==Blocks.AIR && this.getTarget().getY()>=this.getY())
             {
                 world.setBlockState(this.getBlockPos().down(), Blocks.OAK_PLANKS.getDefaultState());
                 if(this.getTarget() instanceof  PlayerEntity)
@@ -170,7 +170,7 @@ public class PirateEntity extends SkeletonEntity {
 
                 }
             }
-            if(this.getTarget().getY()>this.getY())
+            if(this.getTarget().getY()>this.getY()+2)
             {
                 world.setBlockState(this.getBlockPos(), Blocks.OAK_PLANKS.getDefaultState());
                 if(this.getTarget() instanceof  PlayerEntity)
