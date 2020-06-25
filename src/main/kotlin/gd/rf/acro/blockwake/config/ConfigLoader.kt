@@ -22,6 +22,7 @@ class ConfigLoader {
     val DimensionEngagmentLimit: Int;
     val DimensionMinSpacing: Int;
     val DimensionMaxSpacing: Int;
+    val DimensionTeleportDelay: Long;
 
     val RecruitmentSearchRange: Int;
     val VillagerRecruitmentChance: Int;
@@ -35,11 +36,12 @@ class ConfigLoader {
         /**
          * Set the variable here
          */
-        DimensionHasFancySky = conf.getBoolean("dimension.fancySky")
+        DimensionHasFancySky = false//conf.getBoolean("dimension.fancySky")
         DimensionEngagementSpacingBlocks = conf.getInt("dimension.engagements.spacing.width")
         DimensionEngagmentLimit = conf.getInt("dimension.engagements.limit")
         DimensionMinSpacing = conf.getInt("dimension.engagements.spacing.min")
         DimensionMaxSpacing = conf.getInt("dimension.engagements.spacing.max")
+        DimensionTeleportDelay = conf.getLong("dimension.engagements.teleport.delay")
 
         RecruitmentSearchRange = conf.getInt("recruitment.searchRange");
         VillagerRecruitmentChance = conf.getInt("recruitment.chanceMax");

@@ -1,8 +1,8 @@
 package gd.rf.acro.blockwake.engagement
 
 import gd.rf.acro.blockwake.Blockwake
-import gd.rf.acro.blockwake.Blockwake.logger
 import gd.rf.acro.blockwake.Blockwake.config
+import gd.rf.acro.blockwake.Blockwake.logger
 import gd.rf.acro.blockwake.dimension.PirateOceanChunkGenerator
 import gd.rf.acro.blockwake.dimension.PirateOceanPlacementHandler
 import gd.rf.acro.blockwake.entities.PirateEntity
@@ -17,10 +17,11 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import java.util.*
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.sqrt
+
 
 typealias EngagementLocation = Pair<Int, Int>
 
@@ -206,6 +207,17 @@ object EngagementManager {
                 }
             }
         }
+
+        val exec = ScheduledThreadPoolExecutor(1)
+
+        exec.schedule({
+            for ((entities, pos) in arrayOf(Pair(attackerEntities, initialAttackerPosition), Pair(defenderEntities, initialDefenderPosition))) {
+                for (e in entities) {
+                    val loc = getClearSpawnSpace(oceanWorld, pos)
+                    e.teleport(loc.x.toDouble(), loc.y.toDouble(), loc.z.toDouble())
+                }
+            }
+        }, config.DimensionTeleportDelay, TimeUnit.MILLISECONDS)
     }
 
     private fun getClearSpawnSpace(world: ServerWorld, _about: BlockPos): BlockPos {

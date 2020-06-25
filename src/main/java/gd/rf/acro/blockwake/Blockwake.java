@@ -3,6 +3,7 @@ package gd.rf.acro.blockwake;
 import gd.rf.acro.blockwake.blocks.*;
 import gd.rf.acro.blockwake.command.CommandInit;
 import gd.rf.acro.blockwake.dimension.PirateOceanChunkGenerator;
+import gd.rf.acro.blockwake.dimension.PirateOceanPlacementHandler;
 import gd.rf.acro.blockwake.entities.PirateEntity;
 import gd.rf.acro.blockwake.entities.SailingShipEntity;
 import gd.rf.acro.blockwake.items.*;
@@ -10,6 +11,7 @@ import gd.rf.acro.blockwake.world.PortTownFeature;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -36,6 +38,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.Registry;
 import gd.rf.acro.blockwake.config.ConfigLoader;
@@ -95,7 +98,7 @@ public class Blockwake implements ModInitializer {
 			Registry.register(Registry.ENTITY_TYPE,new Identifier("blockwake","pirate")
 					, FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT,PirateEntity::new).dimensions(EntityDimensions.fixed(1,2)).trackable(100,4).build());
 
-
+	public static RegistryKey<World> dimensionRegistryKey;
 
 	private static final Feature<DefaultFeatureConfig> PORT_TOWN = Registry.register(
 			Registry.FEATURE,
@@ -157,6 +160,10 @@ public class Blockwake implements ModInitializer {
 				return new Identifier("blockwake","data");
 			}
 		});
+
+		dimensionRegistryKey = RegistryKey.of(Registry.DIMENSION, new Identifier("blockwake", "pirate_ocean"));
+
+		FabricDimensions.registerDefaultPlacer(dimensionRegistryKey, PirateOceanPlacementHandler.INSTANCE.enter(new BlockPos(0, 64, 0)));
 
 		Biomes.OCEAN.getEntitySpawnList(SpawnGroup.WATER_CREATURE).add(new Biome.SpawnEntry(SAILING_BOAT_ENTITY_ENTITY_TYPE, 10, 1, 1));
 
