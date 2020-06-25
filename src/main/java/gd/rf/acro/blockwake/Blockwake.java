@@ -28,6 +28,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -165,7 +166,7 @@ public class Blockwake implements ModInitializer {
 
 		FabricDimensions.registerDefaultPlacer(dimensionRegistryKey, PirateOceanPlacementHandler.INSTANCE.enter(new BlockPos(0, 64, 0)));
 
-		Biomes.OCEAN.getEntitySpawnList(SpawnGroup.WATER_CREATURE).add(new Biome.SpawnEntry(SAILING_BOAT_ENTITY_ENTITY_TYPE, 10, 1, 1));
+		Biomes.OCEAN.getEntitySpawnList(SpawnGroup.WATER_CREATURE).add(new Biome.SpawnEntry(SAILING_BOAT_ENTITY_ENTITY_TYPE, 5, 1, 1));
 
 
 	}

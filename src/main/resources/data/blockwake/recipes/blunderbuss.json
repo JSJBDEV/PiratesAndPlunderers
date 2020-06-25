@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "blockwake",
+  "pattern": [
+    " PP",
+    "SSP",
+    "RS "
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:redstone"
+    },
+    "R": {
+      "item": "minecraft:flint_and_steel"
+    }
+  },
+  "result": {
+    "item": "blockwake:blunderbuss",
+    "count": 1
+  }
+}

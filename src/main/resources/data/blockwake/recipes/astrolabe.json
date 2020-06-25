@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "blockwake",
+  "pattern": [
+    "CCC",
+    "IDI",
+    "CCC"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "D": {
+      "item": "minecraft:compass"
+    },
+    "C": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "blockwake:astrolabe",
+    "count": 4
+  }
+}

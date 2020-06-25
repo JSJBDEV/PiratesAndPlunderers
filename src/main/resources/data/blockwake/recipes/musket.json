@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "blockwake",
+  "pattern": [
+    "PPP",
+    "SBP",
+    "RSP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "minecraft:dispenser"
+    },
+    "R": {
+      "item": "minecraft:flint_and_steel"
+    }
+  },
+  "result": {
+    "item": "blockwake:musket",
+    "count": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "blockwake",
+  "pattern": [
+    " PP",
+    "PVP",
+    "RS "
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:redstone"
+    },
+    "R": {
+      "item": "minecraft:dispenser"
+    },
+    "V": {
+      "item": "minecraft:compass"
+    }
+  },
+  "result": {
+    "item": "blockwake:ship_grappler",
+    "count": 1
+  }
+}
