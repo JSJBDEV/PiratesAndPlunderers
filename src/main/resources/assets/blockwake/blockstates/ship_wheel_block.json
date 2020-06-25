@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "blockwake:block/ship_wheel_block" }
+  }
+}
