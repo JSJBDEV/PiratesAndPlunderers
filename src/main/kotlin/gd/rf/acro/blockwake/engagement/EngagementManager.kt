@@ -199,7 +199,10 @@ object EngagementManager {
             for (e in entities) {
                 if (e is PlayerEntity || e is PirateEntity) {
                     EntityToShipEntityMap[e] = ship
-                    teleportEntityToPirateOcean(e, getClearSpawnSpace(oceanWorld, pos))
+                    val loc = getClearSpawnSpace(oceanWorld, pos)
+                    teleportEntityToPirateOcean(e, loc)
+                    e.teleport(loc.x.toDouble(), loc.y.toDouble(), loc.z.toDouble())
+
                 }
             }
         }
