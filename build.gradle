@@ -14,7 +14,7 @@ group = project.maven_group
 dependencies {
 	implementation "org.jetbrains.kotlin:kotlin-stdlib"
 	implementation 'com.typesafe:config:1.4.0'
-
+	include 'com.typesafe:config:1.4.0'
 	minecraft "com.mojang:minecraft:1.16-rc1"
 	mappings "net.fabricmc:yarn:1.16-rc1+build.8:v2"
 	modImplementation "net.fabricmc:fabric-loader:0.8.8+build.202"
