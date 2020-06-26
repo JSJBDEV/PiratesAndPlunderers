@@ -168,24 +168,30 @@ public class SailingShipEntity extends PigEntity {
         if(!player.getEntityWorld().isClient && player.getStackInHand(hand)==ItemStack.EMPTY)
         {
             player.startRiding(this,true);
+            return ActionResult.SUCCESS;
         }
         if(!player.getEntityWorld().isClient && player.getStackInHand(hand).getItem()== Blockwake.RECRUITMENT_BOOK_ITEM)
         {
             if(player.getStackInHand(hand).hasTag())
             {
                 CompoundTag tag = player.getStackInHand(hand).getTag();
-
+                if(player.getScoreboardTeam()==null)
+                {
+                    player.getEntityWorld().getScoreboard().addPlayerToTeam(player.getName().asString(),player.getEntityWorld().getScoreboard().addTeam("PIR_"+RandomUtils.nextInt(0,99999)));
+                }
+                Team team = (Team) player.getScoreboardTeam();
                 for (int i = 0; i < tag.getInt("crew"); i++) {
                     PirateEntity entity = new PirateEntity(Blockwake.PIRATE_ENTITY_ENTITY_TYPE,player.getEntityWorld());
                     entity.teleport(this.getX(),this.getY(),this.getZ());
                     player.getEntityWorld().spawnEntity(entity);
                     entity.startRiding(this,true);
+                    player.getEntityWorld().getScoreboard().addPlayerToTeam(entity.getEntityName(),team);
                 }
                 tag.putInt("crew",0);
-
+                return ActionResult.SUCCESS;
             }
         }
-        return super.interactAt(player, hitPos, hand);
+        return ActionResult.FAIL;
     }
 
     @Override

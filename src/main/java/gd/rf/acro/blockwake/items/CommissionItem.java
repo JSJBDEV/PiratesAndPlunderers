@@ -2,6 +2,7 @@ package gd.rf.acro.blockwake.items;
 
 import gd.rf.acro.blockwake.Blockwake;
 import gd.rf.acro.blockwake.entities.SailingShipEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -32,6 +33,15 @@ public class CommissionItem extends Item {
             world.spawnEntity(sailingShipEntity);
             user.getStackInHand(hand).decrement(1);
         }
+        else if(hand==Hand.MAIN_HAND)
+        {
+            String model = "lord_crawlmasks_clipper";
+            SailingShipEntity sailingShipEntity = new SailingShipEntity(Blockwake.SAILING_BOAT_ENTITY_ENTITY_TYPE,world);
+            sailingShipEntity.setModel(model);
+            sailingShipEntity.teleport(user.getX(),user.getY(),user.getZ());
+            world.spawnEntity(sailingShipEntity);
+            user.getStackInHand(hand).decrement(1);
+        }
         return super.use(world, user, hand);
     }
 
@@ -46,4 +56,5 @@ public class CommissionItem extends Item {
             tooltip.add(new LiteralText("Commission: "+format));
         }
     }
+
 }

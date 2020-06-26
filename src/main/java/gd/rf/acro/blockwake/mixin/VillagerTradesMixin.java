@@ -17,7 +17,6 @@ public class VillagerTradesMixin {
     @Inject(method = "fillRecipes", at = @At("RETURN"))
     protected void fillRecipes(CallbackInfo ci)
     {
-        System.out.println("doing the thing");
         VillagerEntity villager = ((VillagerEntity)(Object)this);
         if(villager.getVillagerData().getProfession()== Blockwake.SHIPWRIGHT)
         {

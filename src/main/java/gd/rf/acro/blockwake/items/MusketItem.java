@@ -11,7 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
@@ -34,7 +37,7 @@ public class MusketItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
-        if(user.inventory.count(Blockwake.SHOT_ITEM)>0)
+        if(user.inventory.count(Blockwake.SHOT_ITEM)>0 || user.isCreative())
         {
             //mostly modified from GuardianEntity
             user.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,1,1);
@@ -59,10 +62,13 @@ public class MusketItem extends Item {
                 j += 1.8D - d + random.nextDouble() * (1.7D - d);
                 world.addParticle(ParticleTypes.SMOKE, user.getBlockPos().getX() + e * j, user.getEyeY() + f * j, user.getBlockPos().getZ() + g * j, 0.0D, 0.0D, 0.0D);
              }
-            for (ItemStack item : user.inventory.main) {
-                if (item.getItem() == Blockwake.SHOT_ITEM) {
-                    item.decrement(1);
-                    break;
+            if(!user.isCreative())
+            {
+                for (ItemStack item : user.inventory.main) {
+                    if (item.getItem() == Blockwake.SHOT_ITEM) {
+                        item.decrement(1);
+                        break;
+                    }
                 }
             }
 
@@ -73,6 +79,8 @@ public class MusketItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new LiteralText(this.minDamage+"-"+maxDamage+" damage"));
+        Style style = Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.GRAY));
+        tooltip.add(new LiteralText(this.minDamage+"-"+maxDamage+" damage").setStyle(style));
     }
+
 }
